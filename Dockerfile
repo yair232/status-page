@@ -31,4 +31,4 @@ EXPOSE 8000
 ENTRYPOINT ["./upgrade.sh"]
 
 # Step 10: Start the Gunicorn server to serve the Django application after running upgrade.sh
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "statuspage.wsgi:application"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000", "--insecure"]
