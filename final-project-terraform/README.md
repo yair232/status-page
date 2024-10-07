@@ -5,6 +5,7 @@ Estimate time - 5min
 
 ## Directory Structure
 - `vpc/` - Contains VPC, subnets, and Internet Gateway configurations.
+- 'rds/' - Contains RDS Database configuration.
 - `eks/` - Contains EKS cluster configuration.
 - `load_balancer/` - Contains Load Balancer configuration.
 - `main.tf` - Entry point for the Terraform configuration.
