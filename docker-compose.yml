@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: status-page
+      POSTGRES_USER: status-page
+      POSTGRES_PASSWORD: my-password
+    networks:
+      - app-network
+
+  redis:
+    image: redis:alpine
+    networks:
+      - app-network
+    ports:
+      - "6379:6379"
+
+  web:
+    build:
+      .
+      # command: gunicorn --bind 0.0.0.0:8000 statuspage.wsgi:application
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DEBUG=1
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+      - POSTGRES_NAME=status-page
+      - POSTGRES_USER=status-page
+      - POSTGRES_PASSWORD=my-password
+      - POSTGRES_HOST=db
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
