@@ -6,9 +6,9 @@ VPC (Virtual Private Cloud) with public and private subnets.
 EKS (Elastic Kubernetes Service) for container orchestration.
 RDS (Relational Database Service) for a managed PostgreSQL database.
 IAM (Identity and Access Management) roles and policies for EKS and RDS security.
-Project Structure
-plaintext
-Copy code
+
+**Project Structure**
+```bash
 ├── modules/
 │   ├── iam/
 │   ├── vpc/
@@ -18,7 +18,8 @@ Copy code
 ├── variables.tf
 ├── outputs.tf
 ├── README.md
-Modules
+```
+**Modules**
 VPC Module: Creates a VPC with public and private subnets, an internet gateway, and route tables.
 IAM Module: Manages IAM roles and policies needed for EKS and RDS.
 EKS Module: Configures an EKS cluster and node groups within the VPC.
