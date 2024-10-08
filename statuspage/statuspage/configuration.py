@@ -14,7 +14,7 @@ DATABASE = {
     'NAME': 'status-page',         # Database name
     'USER': 'status-page',               # PostgreSQL username
     'PASSWORD': 'my-password',           # PostgreSQL password
-    'HOST': 'localhost',      # Database server
+    'HOST': 'db',      # Database server
     'PORT': '',               # Database port (leave blank for default)
     'CONN_MAX_AGE': 300,      # Max database connection age
 }
@@ -23,20 +23,20 @@ DATABASE = {
 # for each. Full connection details are required.
 REDIS = {
     'tasks': {
-        'HOST': 'localhost',
+        'HOST': 'redis',
         'PORT': 6379,
         # Comment out `HOST` and `PORT` lines and uncomment the following if using Redis Sentinel
         # 'SENTINELS': [('mysentinel.redis.example.com', 6379)],
         # 'SENTINEL_SERVICE': 'status-page',
         'PASSWORD': '',
-        'DATABASE': 0,
+        'DATABASE': 1,
         'SSL': False,
         # Set this to True to skip TLS certificate verification
         # This can expose the connection to attacks, be careful
         # 'INSECURE_SKIP_TLS_VERIFY': False,
     },
     'caching': {
-        'HOST': 'localhost',
+        'HOST': 'redis',
         'PORT': 6379,
         # Comment out `HOST` and `PORT` lines and uncomment the following if using Redis Sentinel
         # 'SENTINELS': [('mysentinel.redis.example.com', 6379)],
