@@ -7,6 +7,7 @@ Estimate time - 5min
 - `vpc/` - Contains VPC, subnets, and Internet Gateway configurations.
 - `eks/` - Contains EKS cluster configuration.
 - `load_balancer/` - Contains Load Balancer configuration.
+- `iam/` - Contains The IAM Roles configuration.
 - `main.tf` - Entry point for the Terraform configuration.
 - `variables.tf` - Variable definitions.
 - `outputs.tf` - Output values from the Terraform configuration.
