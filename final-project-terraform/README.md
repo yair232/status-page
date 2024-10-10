@@ -87,10 +87,7 @@ terraform apply
 ```
 Confirm the action by typing yes when prompted.
 
-Step 6: Verify the Deployment
-Check the AWS Management Console to confirm that all resources have been created as expected.
-
-Step 7: To remove all resources created by this Terraform project, run the following command:
+Step 6: To remove all resources created by this Terraform project, run the following command:
 ```bash
 terraform destroy
 ```
