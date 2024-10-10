@@ -63,33 +63,37 @@ Clone this repository to your local machine.
 git clone https://github.com/yair232/status-page.git
 cd final-project
 ```
-**Step 2: Initialize Terraform**
+### step 2: Configure AWS CLI
+Run the following command to configure your AWS CLI with your access key, secret key, region, and output format:
+```bash
+aws configure
+```
+### Step 3: Initialize Terraform
 Initialize the Terraform configuration.
-
 ```bash
 terraform init
 ```
-**Step 3: Validate the Configuration
-Check the Terraform configuration for any errors.**
+### Step 4: Validate the Configuration
+Check the Terraform configuration for any errors.
 ```bash
 terraform validate
 ```
-**Step 4: Plan the Deployment**
+### Step 5: Plan the Deployment
 Generate and review the execution plan to ensure the changes are as expected.
 
 ```bash
 terraform plan
 ```
-**Step 5: Apply the Configuration**
+### Step 6: Apply the Configuration
 Deploy the infrastructure by applying the Terraform configuration.
 
 ```bash
 terraform apply
 ```
-Confirm the action by typing yes when prompted.
+**Confirm the action by typing yes when prompted.**
 
-Step 6: To remove all resources created by this Terraform project, run the following command:
+### Step 7: To remove all resources created by this Terraform project, run the following command:
 ```bash
 terraform destroy
 ```
-Confirm the action by typing yes when prompted.
+**Confirm the action by typing yes when prompted.**
