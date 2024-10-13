@@ -14,8 +14,7 @@ variable "eks_node_security_group_id" {
 }
 
 variable "db_name" {
-  description = "Name of the RDS database"
-  type        = string
+  default = "statuspage"  # Updated to meet RDS naming requirements
 }
 
 variable "allocated_storage" {

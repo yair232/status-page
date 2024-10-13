@@ -36,9 +36,9 @@ module "eks" {
   eks_cluster_role_arn           = module.iam.eks_cluster_role_arn
   eks_node_group_role_arn        = module.iam.eks_node_group_role_arn
 
-  eks_worker_node_policy_attachment = module.iam.eks_worker_node_policy_attachment != "" ? module.iam.eks_worker_node_policy_attachment.policy_arn : ""
-  eks_cni_policy_attachment         = module.iam.eks_cni_policy_attachment != "" ? module.iam.eks_cni_policy_attachment.policy_arn : ""
-  ecr_read_only_policy_attachment   = module.iam.ecr_read_only_policy_attachment != "" ? module.iam.ecr_read_only_policy_attachment.policy_arn : ""
+  eks_worker_node_policy_attachment = module.iam.eks_worker_node_policy_attachment  # should be a string (ARN)
+  eks_cni_policy_attachment         = module.iam.eks_cni_policy_attachment          # should be a string (ARN)
+  ecr_read_only_policy_attachment   = module.iam.ecr_read_only_policy_attachment    # should be a string (ARN)
 }
 
 

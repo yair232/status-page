@@ -76,19 +76,19 @@ variable "allocated_storage" {
 variable "db_name" {
   description = "The name of the RDS database."
   type        = string
-  default     = "status-page"
+  default     = "statuspage"
 }
 
 variable "db_username" {
   description = "The username for the RDS database."
   type        = string
-  default     = "status-page"
+  default     = "statuspage"
 }
 
 variable "db_password" {
   description = "The password for the RDS database."
   type        = string
-  default     = "my-password"
+  default     = "mypassword"
 }
 
 variable "db_backup_retention" {

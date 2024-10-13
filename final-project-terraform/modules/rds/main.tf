@@ -31,14 +31,14 @@ resource "aws_security_group" "db_SG" {
 resource "aws_db_instance" "db_insta" {
   engine                 = "postgres"
   db_name                = var.db_name
-  identifier             = "status-page"
+  identifier             = "statuspage"
   instance_class         = var.db_instance_class
   allocated_storage      = var.allocated_storage
   publicly_accessible    = false  # RDS should be private
   username               = var.db_username
   password               = var.db_password
   vpc_security_group_ids = [aws_security_group.db_SG.id]
-  db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name 
+  db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
   skip_final_snapshot    = true
   multi_az               = true
 

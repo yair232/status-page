@@ -7,17 +7,17 @@ output "eks_node_group_role_arn" {
 }
 
 output "eks_cluster_policy_attachment" {
-  value = aws_iam_role_policy_attachment.eks_cluster_policy
+  value = aws_iam_role_policy_attachment.eks_cluster_policy.id
 }
 
 output "eks_worker_node_policy_attachment" {
-  value = aws_iam_role_policy_attachment.eks_worker_node_policy
+  value = aws_iam_role_policy_attachment.eks_worker_node_policy.id
 }
 
 output "eks_cni_policy_attachment" {
-  value = aws_iam_role_policy_attachment.eks_cni_policy
+  value = aws_iam_role_policy_attachment.eks_cni_policy.id
 }
 
 output "ecr_read_only_policy_attachment" {
-  value = aws_iam_role_policy_attachment.ecr_read_only
+  value = aws_iam_role_policy_attachment.ecr_read_only.id
 }

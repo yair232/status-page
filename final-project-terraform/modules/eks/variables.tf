@@ -59,24 +59,20 @@ variable "min_size" {
 variable "node_instance_type" {
   description = "The instance type for the EKS nodes"
   type        = string
-  default     = "t3.medium"
+  default     = "t2.medium"
 }
 
-# IAM Policy Attachments for EKS
 variable "eks_worker_node_policy_attachment" {
   description = "IAM policy ARN for the EKS worker node group"
   type        = string
-  default     = "" # Make sure this is provided or passed by the module that manages IAM roles
 }
 
 variable "eks_cni_policy_attachment" {
   description = "IAM policy ARN for the EKS CNI"
   type        = string
-  default     = "" # Make sure this is provided or passed by the module that manages IAM roles
 }
 
 variable "ecr_read_only_policy_attachment" {
   description = "IAM policy ARN for read-only access to ECR"
   type        = string
-  default     = "" # Make sure this is provided or passed by the module that manages IAM roles
 }
