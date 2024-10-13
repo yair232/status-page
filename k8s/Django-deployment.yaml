@@ -5,7 +5,7 @@ metadata:
   labels:
     app: django
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: django
@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: django
-          image: yair23/statuspage:latest # Replace with your Docker image
+          image: yair23/statuspage:latest
           ports:
             - containerPort: 8000
