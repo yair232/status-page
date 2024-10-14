@@ -2,8 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: django-deployment
-  labels:
-    app: django
+  namespace: default
 spec:
   replicas: 3
   selector:
@@ -15,7 +14,14 @@ spec:
         app: django
     spec:
       containers:
-        - name: django
-          image: yair23/statuspage:latest
-          ports:
-            - containerPort: 8000
+      - name: django
+        image: yair23/statuspage:latest  # Your Django image
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - name: static-files
+          mountPath: /opt/status-page/statuspage/static  # Path where static files will be stored
+      volumes:
+      - name: static-files
+        persistentVolumeClaim:
+          claimName: static-pvc  # Use the PVC created earlier
