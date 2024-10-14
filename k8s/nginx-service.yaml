@@ -4,10 +4,9 @@ metadata:
   name: nginx-service
   namespace: default
 spec:
-  type: NodePort
+  type: LoadBalancer  # Change from NodePort to LoadBalancer
   ports:
-  - port: 80         # Service port to expose
-    targetPort: 80   # Port on the NGINX container
-    nodePort: 30080  # Exposed port on each Node
+    - port: 80         # Service port to expose
+      targetPort: 80   # Port on the NGINX container
   selector:
     app: nginx
