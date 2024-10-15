@@ -1,0 +1,71 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_REGION = 'us-east-1'  // Set your desired AWS region
+        TF_VAR_db_password = credentials('rds-db-password')  // Jenkins credentials for RDS DB password
+        TF_VAR_status_page_password = credentials('status-page-password')  // Jenkins credentials for status-page user password
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the Terraform code from GitHub
+                git 'https://github.com/yair232/status-page.git'
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                // Initialize Terraform in the project directory
+                dir('final-project-terraform') {
+                    sh 'terraform init'
+                }
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                // Run Terraform Plan to see changes
+                dir('final-project-terraform') {
+                    sh 'terraform plan'
+                }
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                // Apply the Terraform plan to create the infrastructure
+                dir('final-project-terraform') {
+                    sh 'terraform apply -auto-approve'
+                }
+            }
+        }
+
+        stage('Run SQL Commands') {
+            steps {
+                script {
+                    // Replace EC2_INSTANCE_IP and RDS_ENDPOINT with variables or dynamically fetch from Terraform outputs
+                    sshagent(['ec2-ssh-key']) {
+                        sh '''
+                            ssh -o StrictHostKeyChecking=no ubuntu@${EC2_INSTANCE_IP} << EOF
+                            export PGPASSWORD="${TF_VAR_db_password}"
+                            psql -h ${RDS_ENDPOINT} -U ${DB_USERNAME} -d ${DB_NAME} -c "CREATE DATABASE \\"status-page\\";"
+                            psql -h ${RDS_ENDPOINT} -U ${DB_USERNAME} -d ${DB_NAME} -c "CREATE USER \\"status-page\\" WITH PASSWORD '${TF_VAR_status_page_password}';"
+                            psql -h ${RDS_ENDPOINT} -U ${DB_USERNAME} -d ${DB_NAME} -c "ALTER DATABASE \\"status-page\\" OWNER TO \\"status-page\\";"
+                            psql -h ${RDS_ENDPOINT} -U ${DB_USERNAME} -d ${DB_NAME} -c "GRANT CREATE ON SCHEMA public TO \\"status-page\\";"
+                            EOF
+                        '''
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Post actions like cleaning up or archiving results
+            echo 'Terraform pipeline complete'
+        }
+    }
+}
