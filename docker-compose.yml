@@ -34,7 +34,7 @@ services:
     networks:
       - app-network
     volumes:
-      - static_volume:/opt/status-page/statuspage/static # Add this line
+      - static_volume:/opt/status-page/statuspage/static
 
   nginx:
     image: nginx:latest
@@ -43,7 +43,7 @@ services:
     depends_on:
       - web
     volumes:
-      - static_volume:/opt/status-page/statuspage/static # Add this line
+      - static_volume:/opt/status-page/statuspage/static
       - ./nginx.conf:/etc/nginx/conf.d/default.conf # Mount your Nginx config
     networks:
       - app-network
