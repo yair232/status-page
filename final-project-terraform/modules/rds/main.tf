@@ -45,4 +45,14 @@ resource "aws_db_instance" "db_insta" {
   tags = {
     Name = "Y-R-db"
   }
+# Add user "status-page" with password for your application
+resource "null_resource" "status_page_user" {
+  provisioner "local-exec" {
+    command = <<EOT
+      export PGPASSWORD="${var.db_password}"
+      psql -h ${aws_db_instance.rds_instance.address} -U admin -d statuspage -c "CREATE USER status_page WITH PASSWORD '${var.status_page_password}'"
+    EOT
+  }
+
+  depends_on = [aws_db_instance.rds_instance]
 }
