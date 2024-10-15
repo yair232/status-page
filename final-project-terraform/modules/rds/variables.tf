@@ -37,11 +37,6 @@ variable "db_password" {
   type        = string
 }
 
-variable "status_page_password" {
-  description = "The password for the status-page user in PostgreSQL."
-  type        = string
-}
-
 variable "private_subnet_ids" {
   description = "List of private subnet IDs"
   type        = list(string)
