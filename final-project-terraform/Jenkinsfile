@@ -2,23 +2,24 @@ pipeline {
     agent any
 
     environment {
-        AWS_REGION = 'us-east-1'  // AWS Region
-        TF_VAR_db_password = credentials('rds-db-password')  // RDS password from Jenkins credentials
-        TF_VAR_status_page_password = credentials('status-page-password')  // Status page user password
+        // Set AWS region and credentials as environment variables from Jenkins credentials
+        AWS_REGION = 'us-east-1'
+        AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')    // AWS access key
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access') // AWS secret key
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the Terraform code from GitHub
-                git 'https://github.com/yair232/status-page.git'
+                // Clone the Terraform code from GitHub
+                git branch: 'main', url: 'https://github.com/your-username/your-terraform-repo.git'
             }
         }
 
         stage('Terraform Init') {
             steps {
-                // Initialize Terraform
-                dir('final-project-terraform') {
+                dir('path-to-your-terraform-code') {
+                    // Initialize Terraform
                     sh 'terraform init'
                 }
             }
@@ -26,37 +27,24 @@ pipeline {
 
         stage('Terraform Plan') {
             steps {
-                // Run Terraform Plan to preview changes
-                dir('final-project-terraform') {
-                    sh 'terraform plan'
+                dir('path-to-your-terraform-code') {
+                    // Run Terraform plan to see the changes
+                    sh 'terraform plan -out=tfplan'
                 }
+            }
+        }
+
+        stage('Approval') {
+            input {
+                message "Do you want to apply these changes?"
             }
         }
 
         stage('Terraform Apply') {
             steps {
-                // Apply the Terraform configuration to create infrastructure
-                dir('final-project-terraform') {
-                    sh 'terraform apply -auto-approve'
-                }
-            }
-        }
-
-        stage('Run SQL Commands') {
-            steps {
-                script {
-                    // SSH into the EC2 instance and run PostgreSQL commands
-                    sshagent(['ec2-ssh-key']) {
-                        sh '''
-                            ssh -o StrictHostKeyChecking=no ubuntu@${EC2_INSTANCE_IP} << EOF
-                            export PGPASSWORD="${TF_VAR_db_password}"
-                            psql -h ${RDS_ENDPOINT} -U ${DB_USERNAME} -d ${DB_NAME} -c "CREATE DATABASE \\"status-page\\";"
-                            psql -h ${RDS_ENDPOINT} -U ${DB_USERNAME} -d ${DB_NAME} -c "CREATE USER \\"status-page\\" WITH PASSWORD '${TF_VAR_status_page_password}';"
-                            psql -h ${RDS_ENDPOINT} -U ${DB_USERNAME} -d ${DB_NAME} -c "ALTER DATABASE \\"status-page\\" OWNER TO \\"status-page\\";"
-                            psql -h ${RDS_ENDPOINT} -U ${DB_USERNAME} -d ${DB_NAME} -c "GRANT CREATE ON SCHEMA public TO \\"status-page\\";"
-                            EOF
-                        '''
-                    }
+                dir('path-to-your-terraform-code') {
+                    // Apply the changes if approved
+                    sh 'terraform apply -auto-approve tfplan'
                 }
             }
         }
@@ -64,7 +52,13 @@ pipeline {
 
     post {
         always {
-            echo 'Terraform pipeline complete'
+            cleanWs()  // Clean up workspace
+        }
+        success {
+            echo 'Terraform pipeline executed successfully!'
+        }
+        failure {
+            echo 'Terraform pipeline failed!'
         }
     }
 }
