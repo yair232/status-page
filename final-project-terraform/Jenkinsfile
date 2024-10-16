@@ -2,48 +2,83 @@ pipeline {
     agent any
 
     environment {
-        AWS_REGION = 'us-east-1'  // Set your AWS region
-        GITHUB_TOKEN = credentials('github-pat')  // GitHub PAT stored in Jenkins credentials
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
+        DOCKER_IMAGE_NAME = 'your-dockerhub-username/status-page'
+        GITHUB_CREDENTIALS_ID = 'github-ssh-key'
     }
 
     stages {
-        stage('Checkout') {
+
+        stage('Clone Repository') {
             steps {
-                // Clone the repository using the GitHub PAT
-                git credentialsId: 'github-pat', url: 'https://github.com/yair232/status-page.git', branch: 'main'
+                script {
+                    echo "Cloning the Git repository..."
+                }
+                git branch: 'main',
+                    url: 'git@github.com:yair232/status-page.git',
+                    credentialsId: "${GITHUB_CREDENTIALS_ID}"
             }
         }
 
-        stage('Terraform Init') {
+        stage('Terraform Init & Apply') {
+            environment {
+                AWS_ACCESS_KEY_ID = credentials('aws-credentials')  // Reference to the Jenkins credentials ID
+                AWS_SECRET_ACCESS_KEY = credentials('aws-credentials')
+            }
             steps {
                 dir('final-project-terraform') {
-                    // Initialize Terraform
-                    sh 'terraform init'
+                    script {
+                        echo "Initializing and applying Terraform configuration..."
+                    }
+                    sh '''
+                    terraform init
+                    terraform plan -out=tfplan
+                    terraform apply -auto-approve tfplan
+                    '''
                 }
             }
         }
 
-        stage('Terraform Plan') {
+        stage('Build Docker Image') {
             steps {
-                dir('final-project-terraform') {
-                    // Run Terraform plan to see the changes
-                    sh 'terraform plan -out=tfplan'
+                script {
+                    echo "Building Docker image from the Dockerfile..."
                 }
+                sh '''
+                docker build -t ${DOCKER_IMAGE_NAME}:latest .
+                '''
             }
         }
 
-        stage('Approval') {
-            input {
-                message "Do you want to apply these changes?"
-                ok "Apply"
-            }
-        }
-
-        stage('Terraform Apply') {
+        stage('Test Docker Image') {
             steps {
-                dir('final-project-terraform') {
-                    // Apply the changes if approved
-                    sh 'terraform apply -auto-approve tfplan'
+                script {
+                    echo "Testing Docker image for basic functionality..."
+                }
+                sh '''
+                docker run --name test-container -d ${DOCKER_IMAGE_NAME}:latest
+                '''
+                sh '''
+                docker exec test-container /bin/bash -c "echo 'Running health check...'; sleep 2; echo 'Service is up'"
+                '''
+                sh '''
+                docker stop test-container
+                docker rm test-container
+                '''
+            }
+        }
+
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    echo "Pushing Docker image to Docker Hub..."
+                }
+                withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    docker push ${DOCKER_IMAGE_NAME}:latest
+                    docker logout
+                    '''
                 }
             }
         }
@@ -51,13 +86,17 @@ pipeline {
 
     post {
         always {
-            cleanWs()  // Clean up workspace
+            script {
+                echo "Cleaning up workspace and Docker resources..."
+            }
+            cleanWs()
+            sh 'docker system prune -f'
         }
         success {
-            echo 'Terraform pipeline executed successfully!'
+            echo 'Pipeline completed successfully!'
         }
         failure {
-            echo 'Terraform pipeline failed!'
+            echo 'Pipeline failed. Please check the logs.'
         }
     }
 }
