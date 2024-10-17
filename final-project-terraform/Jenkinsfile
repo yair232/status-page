@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
-        DOCKER_IMAGE_NAME = 'rontzi/status-page'
+        DOCKER_IMAGE_NAME = 'rontz/status-page'
         GITHUB_CREDENTIALS_ID = 'github-ssh-key'
     }
 
