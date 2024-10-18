@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
-        DOCKER_IMAGE_NAME = 'rontz/status-page'
-        GITHUB_CREDENTIALS_ID = 'github-ssh-key'
+        AWS_CREDENTIALS_ID = 'aws-credentials'  // AWS credentials in Jenkins
+        GITHUB_CREDENTIALS_ID = 'github-ssh-key'  // SSH key credential ID for GitHub
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'  // DockerHub credentials in Jenkins
+        DOCKER_IMAGE_NAME = 'rontz/status-page'  // Docker image name
     }
 
     stages {
-
         stage('Clone Repository') {
             steps {
                 script {
@@ -22,7 +22,7 @@ pipeline {
 
         stage('Terraform Init & Apply') {
             environment {
-                AWS_ACCESS_KEY_ID = credentials('aws-credentials')  // Reference to the Jenkins credentials ID
+                AWS_ACCESS_KEY_ID = credentials('aws-credentials')
                 AWS_SECRET_ACCESS_KEY = credentials('aws-credentials')
             }
             steps {
@@ -35,6 +35,25 @@ pipeline {
                     terraform plan -out=tfplan
                     terraform apply -auto-approve tfplan
                     '''
+                }
+            }
+        }
+
+        stage('Save Terraform State to Git') {
+            steps {
+                dir('final-project-terraform') {
+                    script {
+                        echo "Saving Terraform state file to Git..."
+                    }
+                    sshagent(credentials: ['github-ssh-key']) {
+                        sh '''
+                        git config --global user.email "jenkins@example.com"
+                        git config --global user.name "Jenkins CI"
+                        git add terraform.tfstate
+                        git commit -m "Update Terraform state"
+                        git push origin main
+                        '''
+                    }
                 }
             }
         }
