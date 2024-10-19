@@ -19,6 +19,7 @@ Jenkinsfile - The pipeline definition used by Jenkins.
 - Use the Terraform configuration in final-project-terraform/final-project-jenkins-ec2 to set up a Jenkins server on an AWS EC2 instance.
 - Navigate to the directory and run the following commands:
 ```
+git clone git@github.com:yair232/status-page.git
 cd final-project-terraform/final-project-jenkins-ec2
 terraform init
 terraform apply -auto-approve
