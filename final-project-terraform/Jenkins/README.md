@@ -37,9 +37,9 @@ terraform apply -auto-approve
 ### 1. Add Credentials:
 - Go to Manage Jenkins → Manage Credentials → Global Credentials → Add Credentials.
 ### 2. Credentials to Add:
-- **GitHub SSH Key**: Add an SSH credential with the ID **`github-ssh-key`** to access your GitHub repository.
-- **AWS Credentials**: Add your AWS Access Key and Secret Key as a Username with Password credential with the ID **`aws-credentials`**.
-- **Docker Hub Credentials**: Add your Docker Hub username and password as a Username with Password credential with the ID **`dockerhub-credentials`**.
+- **GitHub SSH Key**: Add an SSH credential with the ID `github-ssh-key` to access your GitHub repository.
+- **AWS Credentials**: Add your AWS Access Key and Secret Key as a Username with Password credential with the ID `aws-credentials`.
+- **Docker Hub Credentials**: Add your Docker Hub username and password as a Username with Password credential with the ID `dockerhub-credentials`.
 ## Step 3: Set Up the Jenkins Pipeline
 1. **Create a New Jenkins Pipeline Project**:
 - In Jenkins, create a new project of type Pipeline.
