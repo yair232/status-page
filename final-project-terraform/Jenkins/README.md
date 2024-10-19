@@ -14,10 +14,16 @@ final-project-terraform/ - Contains all the Terraform configuration files and mo
 Jenkinsfile - The pipeline definition used by Jenkins.
 
 ## Step 1: Set Up Jenkins
-### 1. Install Jenkins:
+### 1. Install & Setup Jenkins EC2 Instance:
 
-- Set up Jenkins on an EC2 instance or your local server.
-- Ensure Jenkins can access the internet for installing plugins and accessing GitHub/Docker Hub.
+- Use the Terraform configuration in final-project-terraform/final-project-jenkins-ec2 to set up a Jenkins server on an AWS EC2 instance.
+- Navigate to the directory and run the following commands:
+```
+cd final-project-terraform/final-project-jenkins-ec2
+terraform init
+terraform apply -auto-approve
+```
+- Once applied, the EC2 instance running Jenkins will be provisioned.
 ### 2. Install Required Jenkins Plugins:
 
 - Navigate to Manage Jenkins → Manage Plugins.
