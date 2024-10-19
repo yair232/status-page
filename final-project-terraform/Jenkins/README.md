@@ -46,7 +46,7 @@ terraform apply -auto-approve
 - Under Pipeline Definition, choose Pipeline from SCM.
 ### 2. Configure the Pipeline:
 - Set the SCM to Git.
-- Use the repository URL: git@github.com:<your-username>/<your-repo>.git.
+- Use the repository URL: git@github.com:yair232/status-page.git.
 - Set the Credentials to github-ssh-key (created in Step 2).
 - Point Jenkins to the Jenkinsfile located in the repository.
 ## Step 4: Run the CI Pipeline
