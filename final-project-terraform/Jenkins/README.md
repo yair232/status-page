@@ -1,6 +1,8 @@
 # Jenkins CI Pipeline for Terraform and Docker
 ## Overview
 This project automates the CI pipeline using Jenkins to provision AWS infrastructure via Terraform, build and test Docker images, and push them to Docker Hub. Follow the steps below to configure and run the pipeline.
+Creator estimate time: 15min
+Destroy estimate time: 11min
 
 ## Prerequisites
 - A running Jenkins instance.
