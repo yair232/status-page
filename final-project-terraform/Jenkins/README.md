@@ -1,5 +1,6 @@
 **Terraform Infrastructure & Jenkins CI/CD Pipeline**
-This repository contains Terraform scripts for provisioning AWS infrastructure and a Jenkins pipeline for continuous integration (CI) and deployment (CD). The pipeline provisions AWS infrastructure using Terraform, builds Docker images, and pushes them to Docker Hub.
+This repository contains Terraform scripts for provisioning AWS infrastructure and a Jenkins pipeline for continuous integration (CI) and deployment (CD). 
+The pipeline provisions AWS infrastructure using Terraform, builds Docker images, and pushes them to Docker Hub.
 
 **Table of Contents**
 Prerequisites
