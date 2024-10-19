@@ -103,7 +103,7 @@ pipeline {
 ```
 2. **Clean Up Workspace**:
 
-- Jenkins will clean up the workspace and Docker resources after the pipeline run using cleanWs() and docker system prune -f.
+- Jenkins will clean up the workspace and Docker resources after the pipeline run using `cleanWs()` and `docker system prune -f`.
 ## Extensions in Jenkins
 - Git: For cloning repositories from GitHub.
 - Pipeline: Manages multi-stage pipeline execution.
