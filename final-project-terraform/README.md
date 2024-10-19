@@ -1,7 +1,7 @@
 # AWS EKS Infrastructure with Terraform
 
 This terraform project sets up an AWS infrastructure with a VPC, subnets, an Internet Gateway, a Load Balancer, and an EKS cluster.
-Estimate time - 5min
+Estimate time - 15min
 
 ## Directory Structure
 - `vpc/` - Contains VPC, subnets, and Internet Gateway configurations.
