@@ -14,7 +14,8 @@ Install the required Jenkins plugins:
 **Step 2: Configure Jenkins Credentials**
 
 Navigate to Manage Jenkins → Manage Credentials.
-Add the following credentials:
+
+**Add the following credentials:**
 GitHub SSH Key: Add SSH credentials with the ID github-ssh-key to access your GitHub repository.
 AWS Credentials: Add an AWS Access Key and Secret Key with the ID aws-credentials.
 Docker Hub Credentials: Add Docker Hub username and password with the ID dockerhub-credentials.
