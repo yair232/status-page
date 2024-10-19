@@ -13,7 +13,7 @@ This project automates the CI pipeline using Jenkins to provision AWS infrastruc
 
 ## Directory Structure
 final-project-terraform/ - Contains all the Terraform configuration files and modules.
-Jenkinsfile - The pipeline definition used by Jenkins.
+Jenkins/Jenkinsfile - The pipeline definition used by Jenkins.
 
 ## Step 1: Set Up Jenkins
 ### 1. Install & Setup Jenkins EC2 Instance:
