@@ -1,24 +1,28 @@
 #!/bin/bash
 
-# Define the backup path and destination in the GitHub repo
-BACKUP_DIR="/var/lib/jenkins/plugins/thinBackup/git-push-backup"
-DEST_DIR="/var/lib/jenkins/plugins/thinBackup/final-project-terraform/Jenkins/backups"
+# Define paths
+BACKUP_DIR="/var/lib/jenkins/plugins/thinBackup"  # ThinBackup directory where backups are stored
+GIT_REPO_DIR="/var/lib/jenkins/status-page/final-project-terraform/Jenkins/backups"  # Git repo backups folder
 
-# Navigate to the backup directory
-cd $BACKUP_DIR
+# Step 1: Navigate to ThinBackup folder
+cd $BACKUP_DIR || exit
 
-# Initialize Git if it's not already a repo
-if [ ! -d ".git" ]; then
-  git init
-  git remote add origin git@github.com:yair232/status-page.git
+# Step 2: Find the latest FULL backup folder
+LATEST_BACKUP=$(ls -td FULL-* | head -1)  # Finds the most recent backup starting with 'FULL'
+
+# Step 3: Check if the backup folder exists
+if [ -d "$LATEST_BACKUP" ]; then
+    # Step 4: Copy the entire folder to the Git repository
+    cp -r "$LATEST_BACKUP" "$GIT_REPO_DIR"
+else
+    echo "No FULL backup folder found!"
+    exit 1
 fi
 
-# Configure Git for Jenkins user
-git config --global user.name "rtzi-hub"
-git config --global user.email "jenkins@example.com"
+# Step 5: Navigate to the Git repository folder
+cd /var/lib/jenkins/status-page || exit
 
-# Stage, commit, and push backup files to GitHub
-git add .
-git commit -m "Jenkins backup on $(date +'%Y-%m-%d')"
-git pull origin main --rebase  # Pull latest changes in case there are conflicts
+# Step 6: Add and commit the new backup folder to the Git repository
+git add final-project-terraform/Jenkins/backups/"$LATEST_BACKUP"
+git commit -m "Added Jenkins backup: $LATEST_BACKUP"
 git push origin main
