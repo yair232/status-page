@@ -17,5 +17,5 @@ git config --global user.email "jenkins@example.com"
 git add .
 git commit -m "Jenkins backup on $(date +'%Y-%m-%d')"
 
-# Push backup to the GitHub repository
-git push origin main
+# Push backup to the 'dev' branch in GitHub
+git push origin dev
