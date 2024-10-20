@@ -13,9 +13,12 @@ fi
 git config --global user.name "rtzi-hub"
 git config --global user.email "jenkins@example.com"
 
+# Switch to 'dev' branch or create it if it does not exist
+git checkout -b dev || git checkout dev
+
 # Add and commit the backup files
 git add .
 git commit -m "Jenkins backup on $(date +'%Y-%m-%d')"
 
-# Push backup to the 'dev' branch in GitHub
-git push origin dev
+# Push backup to the 'dev' branch in the specified path
+git push origin main
