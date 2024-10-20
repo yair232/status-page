@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: django-service-monitor
+  labels:
+    app: prometheus
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: django
+  endpoints:
+    - port: web  # Use the correct port number directly
+      path: /metrics  # Ensure this path is correct
+      interval: 30s 

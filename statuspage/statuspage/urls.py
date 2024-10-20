@@ -85,5 +85,6 @@ _patterns = [
 
 # Prepend BASE_PATH
 urlpatterns = [
-    path('{}'.format(settings.BASE_PATH), include(_patterns))
+    path('{}'.format(settings.BASE_PATH), include(_patterns)),
+    path('', include('django_prometheus.urls')),
 ]

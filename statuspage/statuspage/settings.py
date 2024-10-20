@@ -205,9 +205,11 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
     'otp_yubikey',
+    'django_prometheus',
 ]
 
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -221,6 +223,7 @@ MIDDLEWARE = [
     'statuspage.middleware.APIVersionMiddleware',
     'statuspage.middleware.ObjectChangeMiddleware',
     'statuspage.middleware.DynamicConfigMiddleware',
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 ROOT_URLCONF = 'statuspage.urls'
