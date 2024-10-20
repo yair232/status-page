@@ -14,14 +14,14 @@ spec:
         app: nginx
     spec:
       containers:
-      - name: nginx
-        image: yair23/nginx:latest  # Use your new image here
-        ports:
-        - containerPort: 80
-        volumeMounts:
-        - name: static-files
-          mountPath: /opt/status-page/statuspage/static  # Path where NGINX will look for static files
+        - name: nginx
+          image: yair23/nginx:latest # Use your new image here
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: static-files
+              mountPath: /opt/status-page/statuspage/static # Path where NGINX will look for static files
       volumes:
-      - name: static-files
-        persistentVolumeClaim:
-          claimName: static-pvc  # Use the same PVC
+        - name: static-files
+          persistentVolumeClaim:
+            claimName: static-pvc # Use the same PVC
