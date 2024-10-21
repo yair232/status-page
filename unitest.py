@@ -5,7 +5,7 @@ import subprocess
 # Test for manage.py
 def test_manage_file_exists():
     """Test that manage.py exists and is executable."""
-    manage_file = 'status-page/statuspage/manage.py'
+    manage_file = 'statuspage/manage.py'
     assert os.path.isfile(manage_file), f"{manage_file} file not found"
     assert os.access(manage_file, os.X_OK), f"{manage_file} is not executable"
 
@@ -29,7 +29,7 @@ def test_python_version_in_upgrade_script():
 # Test for gunicorn.py
 def test_gunicorn_config_exists():
     """Test if the gunicorn.py file exists."""
-    gunicorn_file = 'status-page/contrib/gunicorn.py'
+    gunicorn_file = 'contrib/gunicorn.py'
     assert os.path.isfile(gunicorn_file), f"{gunicorn_file} file not found"
 
 def test_gunicorn_config():
