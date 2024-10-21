@@ -139,8 +139,8 @@ resource "aws_instance" "jenkins_ec2" {
     sudo systemctl start jenkins
     sudo apt-get install git
     # Install Python & Modules
-    sudo apt-get install python3
-    sudo apt-get install python3-pip
+    sudo apt-get install -y python3
+    sudo apt-get install -y python3-pip 
     pip3 install pytest
   EOF
 }
