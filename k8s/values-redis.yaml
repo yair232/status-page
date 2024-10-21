@@ -1,7 +1,7 @@
 
 redisAddress: redis://redis-service:6379
 auth:
-  enabled: true
+  enabled: false
 
 serviceMonitor:
   enabled: true
