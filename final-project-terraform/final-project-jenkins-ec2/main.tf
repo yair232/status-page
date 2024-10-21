@@ -141,7 +141,7 @@ resource "aws_instance" "jenkins_ec2" {
     # Install Python & Modules
     sudo apt-get install -y python3
     sudo apt-get install -y python3-pip 
-    pip3 install pytest
+    sudo pip3 install pytest
   EOF
 }
 # For Jenkins enter to http://<jenkins_ec2_public_ip>:8080
