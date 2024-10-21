@@ -1,20 +1,18 @@
 grafana:
   admin:
-    existingSecret: grafana       # The name of the secret you've already created
-    adminPasswordKey: admin.password  # The key within the secret where the password is stored (case-sensitive)
+    existingSecret: grafana  # Name of the secret for admin credentials
+    adminPasswordKey: admin.password  # Key in the secret for the Grafana password
 
-  dashboardProviders:
-    dashboardproviders.yaml:
-      apiVersion: 1
-      providers:
-        - name: 'default'
-          orgId: 1
-          folder: ''
-          type: file
-          disableDeletion: false
-          editable: true
-          options:
-            path: /var/lib/grafana/dashboards
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana-dashboard           # Label for ConfigMaps containing dashboards
+      folder: /var/lib/grafana/dashboards  # Directory for storing dashboards in Grafana
+      updateIntervalSeconds: 10          # Interval for updating dashboards
+      folderAnnotation: grafana_folder    # Annotation for organizing dashboards into folders
+      provider:
+        allowUiUpdates: true             # Permit users to update dashboards via the UI
+        foldersFromFilesStructure: true   # Use folder structure for organizing dashboards
 
   dashboardsConfigMaps:
-    - grafana-dashboards
+    default: "grafana-dashboard"  
