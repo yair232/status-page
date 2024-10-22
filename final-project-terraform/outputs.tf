@@ -14,4 +14,4 @@ output "public_subnet_ids" {
 output "rds_endpoint" {
   value       = module.rds.db_instance_endpoint
   description = "The RDS instance endpoint"
-}1
+}
