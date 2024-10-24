@@ -4,7 +4,7 @@ metadata:
   name: django-deployment
   namespace: default
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: django
@@ -14,14 +14,30 @@ spec:
         app: django
     spec:
       containers:
-      - name: django
-        image: yair23/statuspage:latest  # Your Django image
-        ports:
-        - containerPort: 8000
-        volumeMounts:
-        - name: static-files
-          mountPath: /opt/status-page/statuspage/static  # Path where static files will be stored
+        - name: django
+          image: yair23/statuspage:latest
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: static-files
+              mountPath: /opt/status-page/statuspage/static
+          resources:
+            requests:
+              cpu: "100m" # Start with a light CPU footprint
+              memory: "256Mi" # Start with 256Mi memory to handle light traffic
+            limits:
+              cpu: "400m" # Max CPU usage per pod
+              memory: "600Mi" # Max memory usage per pod (600Mi)
+          # Startup Probe Configuration
+          startupProbe:
+            httpGet:
+              path: /dashboard/ # Health check path for your Django app (make sure this is correct)
+              port: 8000
+            initialDelaySeconds: 40 # Wait 40 seconds before starting the probe
+            periodSeconds: 10 # Probe every 10 seconds
+            failureThreshold: 5 # Fail if 5 consecutive probes fail
+            timeoutSeconds: 5 # Timeout if the probe doesn't respond within 5 seconds
       volumes:
-      - name: static-files
-        persistentVolumeClaim:
-          claimName: static-pvc  # Use the PVC created earlier
+        - name: static-files
+          persistentVolumeClaim:
+            claimName: static-pvc

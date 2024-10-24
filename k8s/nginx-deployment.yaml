@@ -4,7 +4,7 @@ metadata:
   name: nginx-deployment
   namespace: default
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: nginx
@@ -14,14 +14,30 @@ spec:
         app: nginx
     spec:
       containers:
-      - name: nginx
-        image: yair23/nginx:latest  # Use your new image here
-        ports:
-        - containerPort: 80
-        volumeMounts:
-        - name: static-files
-          mountPath: /opt/status-page/statuspage/static  # Path where NGINX will look for static files
+        - name: nginx
+          image: yair23/nginx:latest
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: static-files
+              mountPath: /opt/status-page/statuspage/static
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
+
+          startupProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 3
+            timeoutSeconds: 5
       volumes:
-      - name: static-files
-        persistentVolumeClaim:
-          claimName: static-pvc  # Use the same PVC
+        - name: static-files
+          persistentVolumeClaim:
+            claimName: static-pvc
