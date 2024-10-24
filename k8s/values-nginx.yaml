@@ -1,9 +1,9 @@
 serviceMonitor:
-  enabled: true  
-  namespace: ""  
-  interval: 30s  
-  path: /metrics  
+  enabled: true
+  namespace: ""
+  interval: 30s
+  path: /metrics
   additionalLabels:
-    release: prometheus  
+    release: prometheus
 
-nginxServer: "http://nginx-service:80/stub_status" 
+nginxServer: "http://nginx-service:80/stub_status"

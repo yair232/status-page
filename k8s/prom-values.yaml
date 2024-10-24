@@ -51,43 +51,42 @@ alertmanager:
   alertmanagerSpec:
     config:
       global:
-        smtp_smarthost: 'smtp.gmail.com:587'
-        smtp_from: 'y.rproject123@gmail.com'
-        smtp_auth_username: 'y.rproject123@gmail.com'
-        smtp_auth_password: 'RY123456789'  # Consider using a Kubernetes Secret for this
+        smtp_smarthost: "smtp.gmail.com:587"
+        smtp_from: "y.rproject123@gmail.com"
+        smtp_auth_username: "y.rproject123@gmail.com"
+        smtp_auth_password: "RY123456789" # Consider using a Kubernetes Secret for this
         smtp_require_tls: true
       route:
-        group_by: ['alertname']
+        group_by: ["alertname"]
         group_wait: 30s
         group_interval: 5m
         repeat_interval: 1h
-        receiver: 'email-notifications'
+        receiver: "email-notifications"
       receivers:
-        - name: 'email-notifications'
+        - name: "email-notifications"
           email_configs:
-            - to: 
-                - 'yair.ginat@nitzanim.tech'
-                - 'ron.tzidky@nitzanim.tech'
-              from: 'y.rproject123@gmail.com'
-              subject: 'Alert: {{ .AlertName }}'
+            - to:
+                - "yair.ginat@nitzanim.tech"
+                - "ron.tzidky@nitzanim.tech"
+              from: "y.rproject123@gmail.com"
+              subject: "Alert: {{ .AlertName }}"
               send_resolved: true
-
 
 grafana:
   admin:
-    existingSecret: grafana  # Name of the secret for admin credentials
-    adminPasswordKey: admin.password  # Key in the secret for the Grafana password
+    existingSecret: grafana # Name of the secret for admin credentials
+    adminPasswordKey: admin.password # Key in the secret for the Grafana password
 
   sidecar:
     dashboards:
       enabled: true
-      label: grafana-dashboard           # Label for ConfigMaps containing dashboards
-      folder: /var/lib/grafana/dashboards  # Directory for storing dashboards in Grafana
-      updateIntervalSeconds: 10          # Interval for updating dashboards
-      folderAnnotation: grafana_folder    # Annotation for organizing dashboards into folders
+      label: grafana-dashboard # Label for ConfigMaps containing dashboards
+      folder: /var/lib/grafana/dashboards # Directory for storing dashboards in Grafana
+      updateIntervalSeconds: 10 # Interval for updating dashboards
+      folderAnnotation: grafana_folder # Annotation for organizing dashboards into folders
       provider:
-        allowUiUpdates: true             # Permit users to update dashboards via the UI
-        foldersFromFilesStructure: true   # Use folder structure for organizing dashboards
+        allowUiUpdates: true # Permit users to update dashboards via the UI
+        foldersFromFilesStructure: true # Use folder structure for organizing dashboards
 
   dashboardsConfigMaps:
-    default: "grafana-dashboard"  
+    default: "grafana-dashboard"
