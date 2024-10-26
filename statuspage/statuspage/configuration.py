@@ -14,7 +14,7 @@ DATABASE = {
     'NAME': 'status-page',         # Database name
     'USER': 'statuspage',               # PostgreSQL username
     'PASSWORD': 'mypassword',           # PostgreSQL password
-    'HOST': 'statuspage.ch0qwscg4fi5.us-east-1.rds.amazonaws.com:5432',      # Database server | RDS-Yair: y-r.cx248m4we6k7.us-east-1.rds.amazonaws.com
+    'HOST': 'y-r.cx248m4we6k7.us-east-1.rds.amazonaws.com',      # Database server | RDS-Yair: y-r.cx248m4we6k7.us-east-1.rds.amazonaws.com
     'PORT': '',               # Database port (leave blank for default)
     'CONN_MAX_AGE': 300,      # Max database connection age
 }
