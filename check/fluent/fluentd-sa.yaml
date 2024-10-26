@@ -1,0 +1,7 @@
+piVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fluentd
+  namespace: elastic-stack
+  labels:
+    app: fluentd
