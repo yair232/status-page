@@ -1,18 +1,20 @@
-# argocd/application.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: final-project
+  name: prometheus
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: https://github.com/yair232/status-page.git
+    repoURL: https://prometheus-community.github.io/helm-charts
     targetRevision: main
-    path: k8s
+    chart: prometheus
+    helm:
+      valueFiles:
+        - prom-values.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: monitoring
   syncPolicy:
     automated:
       prune: true
