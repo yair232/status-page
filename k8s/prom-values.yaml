@@ -1,0 +1,92 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager-prometheus-kube-prometheus-alertmanager:9093
+
+prometheus:
+  prometheusSpec:
+    serviceAccountName: prometheus-kube-prometheus-prometheus
+    serviceMonitorSelector:
+      matchLabels:
+        app: prometheus
+    podMonitorSelector:
+      matchLabels:
+        app: prometheus
+    additionalScrapeConfigs:
+      name: additional-scrape-configs
+      key: scrape-configs.yaml
+    ruleSelector:
+      matchLabels:
+        role: prometheus-rule
+    rules:
+      alerting:
+        alert: AlertingRules
+        groups:
+          - name: alerting
+            rules:
+              - alert: HighCpuUsage
+                expr: avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100 < 20
+                for: 5m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: "High CPU Usage detected on instance {{ $labels.instance }}"
+                  description: "CPU usage has been above 80% for the last 5 minutes."
+              - alert: HighMemoryUsage
+                expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 80
+                for: 5m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: "High Memory Usage detected on instance {{ $labels.instance }}"
+                  description: "Memory usage has been above 80% for the last 5 minutes."
+
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    config:
+      global:
+        smtp_smarthost: "smtp.gmail.com:587"
+        smtp_from: "y.rproject123@gmail.com"
+        smtp_auth_username: "y.rproject123@gmail.com"
+        smtp_auth_password: "RY123456789" # Consider using a Kubernetes Secret for this
+        smtp_require_tls: true
+      route:
+        group_by: ["alertname"]
+        group_wait: 30s
+        group_interval: 5m
+        repeat_interval: 1h
+        receiver: "email-notifications"
+      receivers:
+        - name: "email-notifications"
+          email_configs:
+            - to:
+                - "yair.ginat@nitzanim.tech"
+                - "ron.tzidky@nitzanim.tech"
+              from: "y.rproject123@gmail.com"
+              subject: "Alert: {{ .AlertName }}"
+              send_resolved: true
+
+grafana:
+  admin:
+    existingSecret: grafana # Name of the secret for admin credentials
+    adminPasswordKey: admin.password # Key in the secret for the Grafana password
+
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana-dashboard # Label for ConfigMaps containing dashboards
+      folder: /var/lib/grafana/dashboards # Directory for storing dashboards in Grafana
+      updateIntervalSeconds: 10 # Interval for updating dashboards
+      folderAnnotation: grafana_folder # Annotation for organizing dashboards into folders
+      provider:
+        allowUiUpdates: true # Permit users to update dashboards via the UI
+        foldersFromFilesStructure: true # Use folder structure for organizing dashboards
+
+  dashboardsConfigMaps:
+    default: "grafana-dashboard"
