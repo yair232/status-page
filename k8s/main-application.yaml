@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/yair232/status-page  # Replace with your repo URL
     targetRevision: dev # Use the branch you want to track, e.g., "main"
-    path: .  # Path within the repo where your YAML files are located; use "." if in the root
+    path: k8s # Path within the repo where your YAML files are located; use "." if in the root
   destination:
     server: https://kubernetes.default.svc  # Default cluster address within Kubernetes
     namespace: default  # Namespace to deploy resources
