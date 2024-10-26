@@ -31,7 +31,7 @@ spec:
           # Startup Probe Configuration
           startupProbe:
             httpGet:
-              path: /dashboard/ # Health check path for your Django app (make sure this is correct)
+              path: / # Health check path for your Django app (make sure this is correct) | history: /dashboard/
               port: 8000
             initialDelaySeconds: 60 # Wait 40 seconds before starting the probe
             periodSeconds: 10 # Probe every 10 seconds
