@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: main-application
+  namespace: argocd  # Namespace where Argo CD is installed
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/yair232/status-page  # Replace with your repo URL
+    targetRevision: dev # Use the branch you want to track, e.g., "main"
+    path: .  # Path within the repo where your YAML files are located; use "." if in the root
+  destination:
+    server: https://kubernetes.default.svc  # Default cluster address within Kubernetes
+    namespace: default  # Namespace to deploy resources
+  syncPolicy:
+    automated:
+      prune: true  # Automatically delete resources removed from the repo
+      selfHeal: true  # Automatically detect and correct out-of-sync resources
+  # Optionally, set sync options if you want to limit retries
+  syncOptions:
+    - CreateNamespace=true  # Automatically create the target namespace if it doesn't exist
