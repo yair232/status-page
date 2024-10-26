@@ -27,7 +27,7 @@ spec:
               memory: "256Mi" # Start with 256Mi memory to handle light traffic
             limits:
               cpu: "400m" # Max CPU usage per pod
-              memory: "600Mi" # Max memory usage per pod (600Mi)
+              memory: "1Gi" # Max memory usage per pod (600Mi)
           # Startup Probe Configuration
           startupProbe:
             httpGet:
