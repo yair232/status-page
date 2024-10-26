@@ -33,7 +33,7 @@ spec:
             httpGet:
               path: /dashboard/ # Health check path for your Django app (make sure this is correct)
               port: 8000
-            initialDelaySeconds: 40 # Wait 40 seconds before starting the probe
+            initialDelaySeconds: 250 # Wait 40 seconds before starting the probe
             periodSeconds: 10 # Probe every 10 seconds
             failureThreshold: 5 # Fail if 5 consecutive probes fail
             timeoutSeconds: 5 # Timeout if the probe doesn't respond within 5 seconds
