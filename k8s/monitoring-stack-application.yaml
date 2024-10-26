@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring-stack
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/yair232/status-page  # Replace with your Git repo URL
+    targetRevision: dev
+    path: monitoring-stack
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring  # Target namespace for the stack
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
