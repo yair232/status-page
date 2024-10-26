@@ -1,0 +1,13 @@
+apiVersion: v2
+name: monitoring-stack
+version: 0.1.0
+dependencies:
+  - name: kube-prometheus-stack
+    version: "latest"  # Use a specific version for stability
+    repository: "https://prometheus-community.github.io/helm-charts"
+  - name: prometheus-redis-exporter
+    version: "latest"
+    repository: "https://prometheus-community.github.io/helm-charts"
+  - name: prometheus-nginx-exporter
+    version: "latest"
+    repository: "https://prometheus-community.github.io/helm-charts"
