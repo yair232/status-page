@@ -1379,6 +1379,6 @@ kind: ConfigMap
 metadata:
   creationTimestamp: "2024-10-21T16:59:29Z"
   name: grafana-dashboard
-  namespace: monitoring
+  namespace: default
   resourceVersion: "14356"
   uid: c45eced8-8223-42b4-a01b-205f5b952df3
