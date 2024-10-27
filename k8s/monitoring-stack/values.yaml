@@ -19,6 +19,7 @@ kube-prometheus-stack:
               - to: 
                   - 'yair.ginat@nitzanim.tech'
                   - 'ron.tzidky@nitzanim.tech'
+
   grafana:
     admin:
       existingSecret: grafana
@@ -30,3 +31,13 @@ kube-prometheus-stack:
         enabled: true
         folder: /var/lib/grafana/dashboards
         label: grafana-dashboard
+
+  prometheus:
+    prometheusSpec:
+      serviceMonitorNamespaceSelector:
+        matchNames:
+          - default
+          - monitoring
+      serviceMonitorSelector:
+        matchLabels:
+          release: prometheus
