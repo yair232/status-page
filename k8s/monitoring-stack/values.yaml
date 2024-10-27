@@ -1,10 +1,10 @@
 # Main values.yaml for the monitoring-stack Helm chart
 
-kube-prometheus-stack:
-  global:
-    scrape_interval: 15s
-    evaluation_interval: 15s
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
 
+kube-prometheus-stack:
   alerting:
     alertmanagers:
       - static_configs:
