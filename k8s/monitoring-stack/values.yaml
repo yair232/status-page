@@ -92,7 +92,7 @@ kube-prometheus-stack:
           foldersFromFilesStructure: true  # Use folder structure for organizing dashboards
 
     dashboardsConfigMaps:
-      default: "grafana-dashboard"
+      default: "grafana-dashboard"  # Default config map label for dashboards
 
 prometheus-redis-exporter:
   redisAddress: redis://redis-service:6379
