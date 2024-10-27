@@ -1,0 +1,17 @@
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    name: django-service-monitor
+    namespace: default
+    labels:
+      app: prometheus
+      app.kubernetes.io/instance: finalproject
+      release: prometheus
+  spec:
+    endpoints:
+    - interval: 30s
+      path: /metrics
+      port: web
+    selector:
+      matchLabels:
+        app: django
