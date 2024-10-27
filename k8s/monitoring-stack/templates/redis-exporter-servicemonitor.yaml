@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: nginx-exporter-servicemonitor
-  namespace: monitoring  # Use the namespace where the exporter is running
+  namespace: default  # Use the namespace where the exporter is running
   labels:
     app: prometheus  # Match the label that Prometheus is configured to select
     release: prometheus  # Ensure this label aligns with Prometheus's `serviceMonitorSelector`
@@ -21,7 +21,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: nginx-exporter-servicemonitor
-  namespace: monitoring  # or default, depending on where you placed your exporter service
+  namespace: default  # or default, depending on where you placed your exporter service
   labels:
     release: prometheus
 spec:
