@@ -1,15 +1,20 @@
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: nginx-exporter-servicemonitor
-  namespace: monitoring  # or default, depending on where you placed your exporter service
-  labels:
-    release: prometheus
-spec:
-  selector:
-    matchLabels:
-      app: nginx-exporter  # Ensure this matches the label on the Nginx exporter service
-  endpoints:
-    - port: metrics        # Ensure this matches the exporter’s metrics port in the service
-      path: /metrics       # Adjust if necessary for specific exporters
-      interval: 30s
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    name: nginx-exporter-prometheus-nginx-exporter
+    namespace: monitoring
+    labels:
+      app.kubernetes.io/component: metrics
+      app.kubernetes.io/instance: nginx-exporter
+      app.kubernetes.io/name: prometheus-nginx-exporter
+      release: prometheus
+  spec:
+    endpoints:
+    - interval: 30s
+      path: /metrics
+      port: http
+    jobLabel: nginx-exporter-prometheus-nginx-exporter
+    selector:
+      matchLabels:
+        app.kubernetes.io/instance: nginx-exporter
+        app.kubernetes.io/name: prometheus-nginx-exporter
