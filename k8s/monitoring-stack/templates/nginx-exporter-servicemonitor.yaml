@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nginx-exporter-monitor
+  namespace: default  # Use the namespace where the exporter is running
+  labels:
+    app: prometheus  # Match the label that Prometheus is configured to select
+    release: prometheus  # Ensure this label aligns with Prometheus's `serviceMonitorSelector`
+spec:
+  selector:
+    matchLabels:
+      app: nginx-exporter  # Match this label with the label on the nginx-exporter Service
+  endpoints:
+    - port: metrics  # Name of the port in the nginx-exporter service
+      path: /metrics  # Path where metrics are exposed
+      interval: 30s  # Scraping interval
+  namespaceSelector:
+    matchNames:
+      - default  # Namespace where the NGINX exporter is running
