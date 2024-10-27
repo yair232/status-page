@@ -16,10 +16,14 @@ kube-prometheus-stack:
       serviceAccountName: prometheus-kube-prometheus-prometheus
       serviceMonitorSelector:
         matchLabels:
-          app: prometheus
+          release: prometheus  # Updated selector to match release label
       podMonitorSelector:
         matchLabels:
-          app: prometheus
+          release: prometheus
+      serviceMonitorNamespaceSelector:
+        matchNames:
+          - default      # Set to monitor services in 'default' and 'monitoring'
+          - monitoring
       additionalScrapeConfigs:
         name: additional-scrape-configs
         key: scrape-configs.yaml
@@ -101,6 +105,7 @@ prometheus-redis-exporter:
 
   serviceMonitor:
     enabled: true
+    namespace: default  # Ensure this matches the namespace for Redis deployment
     labels:
       release: prometheus
 
@@ -111,10 +116,9 @@ prometheus-redis-exporter:
 prometheus-nginx-exporter:
   serviceMonitor:
     enabled: true
-    namespace: ""
+    namespace: default  # Ensure this matches the namespace for Nginx deployment
     interval: 30s
     path: /metrics
-    additionalLabels:
+    labels:
       release: prometheus
-
-  nginxServer: "http://nginx-service:80/stub_status"
+    nginxServer: "http://nginx-service.default.svc:80/stub_status"  # Fully qualified domain name for Nginx service in default namespace
