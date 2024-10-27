@@ -1,8 +1,8 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: redis-exporter-monitor
-  namespace: default  # Use the namespace where the exporter is running
+  name: nginx-exporter-servicemonitor
+  namespace: monitoring  # Use the namespace where the exporter is running
   labels:
     app: prometheus  # Match the label that Prometheus is configured to select
     release: prometheus  # Ensure this label aligns with Prometheus's `serviceMonitorSelector`
@@ -14,6 +14,21 @@ spec:
     - port: redis-exporter  # Name of the port in the redis-exporter service
       path: /metrics  # Path where metrics are exposed
       interval: 30s  # Scraping interval
-  namespaceSelector:
-    matchNames:
-      - default  # Namespace where the Redis exporter is running
+
+
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nginx-exporter-servicemonitor
+  namespace: monitoring  # or default, depending on where you placed your exporter service
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: nginx-exporter  # Ensure this matches the label on the Nginx exporter service
+  endpoints:
+    - port: metrics        # Ensure this matches the exporter’s metrics port in the service
+      path: /metrics       # Adjust if necessary for specific exporters
+      interval: 30s
