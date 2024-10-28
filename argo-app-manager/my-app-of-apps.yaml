@@ -11,80 +11,10 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: argo-apps
     repoURL: https://github.com/yair232/status-page.git
+    path: argo-apps
     targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-  sources:
-    # Step 1: Apply namespace configurations
-    - source:
-        repoURL: https://github.com/yair232/status-page.git
-        path: k8s/namespace
-        targetRevision: HEAD
-      destination:
-        namespace: default
-        server: https://kubernetes.default.svc
-      syncWave: '0'
-      
-    # Step 2: Apply monitor configurations
-    - source:
-        repoURL: https://github.com/yair232/status-page.git
-        path: k8s/monitor
-        targetRevision: HEAD
-      destination:
-        namespace: monitoring
-        server: https://kubernetes.default.svc
-      syncWave: '1'
-      
-    # Step 3: Install kube-prometheus-stack using Helm
-    - source:
-        repoURL: https://github.com/yair232/status-page.git
-        path: k8s/monitor/kube-prometheus-stack
-        targetRevision: HEAD
-        helm:
-          valueFiles:
-            - prom-values.yaml
-      destination:
-        namespace: monitoring
-        server: https://kubernetes.default.svc
-      syncWave: '2'
-      
-    # Step 4: Apply app configurations
-    - source:
-        repoURL: https://github.com/yair232/status-page.git
-        path: k8s/app
-        targetRevision: HEAD
-      destination:
-        namespace: default
-        server: https://kubernetes.default.svc
-      syncWave: '3'
-      
-    # Step 5: Install nginx-exporter using Helm
-    - source:
-        repoURL: https://github.com/yair232/status-page.git
-        path: k8s/monitor/prometheus-nginx-exporter
-        targetRevision: HEAD
-        helm:
-          valueFiles:
-            - values-nginx.yaml
-      destination:
-        namespace: monitoring
-        server: https://kubernetes.default.svc
-      syncWave: '4'
-      
-    # Step 6: Install redis-exporter using Helm
-    - source:
-        repoURL: https://github.com/yair232/status-page.git
-        path: k8s/monitor/prometheus-redis-exporter
-        targetRevision: HEAD
-        helm:
-          valueFiles:
-            - values-redis.yaml
-      destination:
-        namespace: monitoring
-        server: https://kubernetes.default.svc
-      syncWave: '5'
-      
