@@ -1,3 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: alerting-rules
+  namespace: monitoring
+spec:
+  groups:
+    - name: alert.rules
+      rules:
+        - alert: HighCPUUsage
+          expr: cpu_usage > 80
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "High CPU usage detected on instance"
+---
+# Configuration for alertmanager
 alertmanager:
   enabled: true
   alertmanagerSpec:
@@ -17,9 +35,11 @@ alertmanager:
       receivers:
         - name: 'email-notifications'
           email_configs:
-            - to: 
-                - 'yair.ginat@nitzanim.tech'
-                - 'ron.tzidky@nitzanim.tech'
+            - to: 'yair.ginat@nitzanim.tech'
+              from: 'y.rproject123@gmail.com'
+              subject: 'Alert: {{ .AlertName }}'
+              send_resolved: true
+            - to: 'ron.tzidky@nitzanim.tech'
               from: 'y.rproject123@gmail.com'
               subject: 'Alert: {{ .AlertName }}'
               send_resolved: true
