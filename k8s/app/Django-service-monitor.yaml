@@ -10,7 +10,7 @@ spec:
     matchLabels:
       app: django
   endpoints:
-    - port: "http" # Use the correct port number directly
+    - port: "web" # Use the correct port number directly
       path: /metrics # Ensure this path is correct
       interval: 30s
   
