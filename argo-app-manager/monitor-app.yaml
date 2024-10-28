@@ -13,10 +13,12 @@ spec:
     path: k8s/monitor
     targetRevision: HEAD
   syncPolicy:
+    syncOptions:
+      - "ServerSideApply=true"
     automated:
       prune: true
       selfHeal: true
-  syncWave: '1'
+  syncWave: "1"
   hooks:
-   - type: PostSync
-     command: ["sh", "-c", "echo 'Waiting 250 seconds before proceeding...'; sleep 10"]
+    - type: PostSync
+      command: ["sh", "-c", "echo 'Waiting 250 seconds before proceeding...'; sleep 250"]
