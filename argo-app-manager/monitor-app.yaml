@@ -14,8 +14,7 @@ spec:
     targetRevision: HEAD
   syncPolicy:
     syncOptions:
-      - "ServerSideApply=true"
-      - "forceConflicts=true"
+      - "Replace=true"
     automated:
       prune: true
       selfHeal: true
