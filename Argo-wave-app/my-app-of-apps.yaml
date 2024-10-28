@@ -1,0 +1,89 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app-of-apps
+  namespace: argocd  # Argo CD's namespace, often 'argocd'
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/yair232/status-page.git  # Replace with your repo URL
+    path: argo-apps                                      # Path in the repo where this file is located
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc               # URL of the cluster
+    namespace: default                                   # Namespace where Argo CD creates the child applications
+  syncPolicy:
+    automated:                                           # Enables automated syncs
+      prune: true                                        # Prune resources when they are removed from the repo
+      selfHeal: true                                     # Self-healing to ensure desired state
+  # Child applications
+  sources:
+    - name: namespace
+      source:
+        repoURL: https://github.com/yair232/status-page.git
+        path: k8s/namespace
+        targetRevision: HEAD
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: default
+      syncWave: "0"
+
+    - name: monitor
+      source:
+        repoURL: https://github.com/yair232/status-page.git
+        path: k8s/monitor
+        targetRevision: HEAD
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: monitoring
+      syncWave: "1"
+
+    - name: prometheus-stack
+      source:
+        repoURL: https://github.com/yair232/status-page.git
+        path: k8s/monitor/kube-prometheus-stack
+        targetRevision: HEAD
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: monitoring
+      syncWave: "2"
+
+    - name: app-deployment
+      source:
+        repoURL: https://github.com/yair232/status-page.git
+        path: k8s/app
+        targetRevision: HEAD
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: default
+      syncWave: "3"
+
+    - name: nginx-exporter
+      source:
+        repoURL: https://github.com/yair232/status-page.git
+        path: k8s/monitor/prometheus-nginx-exporter
+        targetRevision: HEAD
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: monitoring
+      syncWave: "4"
+
+    - name: redis-exporter
+      source:
+        repoURL: https://github.com/yair232/status-page.git
+        path: k8s/monitor/prometheus-redis-exporter
+        targetRevision: HEAD
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: monitoring
+      syncWave: "5"
+
+    - name: logging
+      source:
+        repoURL: https://github.com/yair232/status-page.git
+        path: k8s/logging
+        targetRevision: HEAD
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: logging
+      syncWave: "6"
