@@ -8,7 +8,7 @@ spec:
   selector:
     app: django
   ports:
-    - name: web
+    - name: http
       protocol: TCP
       port: 8000
       targetPort: 8000
