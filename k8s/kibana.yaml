@@ -6,13 +6,13 @@ metadata:
   labels:
     app: kibana
 spec:
+  type: NodePort  # or ClusterIP if you're using port-forward
   ports:
     - port: 5601
       targetPort: 5601
+      nodePort: 30001  # Optional, if using NodePort
   selector:
-    app: kibana
-  type: LoadBalancer
-
+    app: kibana 
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -35,4 +35,4 @@ spec:
             - containerPort: 5601
           env:
             - name: ELASTICSEARCH_HOSTS
-              value: "http://elasticsearch:9200"
+              value: "http://elasticsearch.elastic-stack:9200"
