@@ -1,12 +1,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: fluentd
+  name: fluent-bit-read
 roleRef:
-  kind: ClusterRole
-  name: fluentd
   apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: fluent-bit-read
 subjects:
   - kind: ServiceAccount
-    name: fluentd
+    name: fluent-bit
     namespace: elastic-stack
