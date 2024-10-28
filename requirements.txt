@@ -2,7 +2,7 @@ Markdown==3.6
 pillow==10.3.0
 PyYAML==6.0.1
 bleach==6.1.0
-django-filter==24.2
+django-filter==24.3
 django-formtools==2.5.1
 django-mptt==0.16.0
 django-otp-yubikey==1.1.0
