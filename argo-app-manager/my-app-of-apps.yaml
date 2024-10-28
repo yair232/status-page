@@ -1,89 +1,84 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  labels:
+    app.kubernetes.io/instance: app-manager
   name: my-app-of-apps
-  namespace: argocd  # Argo CD's namespace, often 'argocd'
+  namespace: argocd
 spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
   project: default
   source:
-    repoURL: https://github.com/yair232/status-page.git  # Replace with your repo URL
-    path: argo-apps                                      # Path in the repo where this file is located
+    path: argo-apps
+    repoURL: https://github.com/yair232/status-page.git
     targetRevision: HEAD
-  destination:
-    server: https://kubernetes.default.svc               # URL of the cluster
-    namespace: default                                   # Namespace where Argo CD creates the child applications
   syncPolicy:
-    automated:                                           # Enables automated syncs
-      prune: true                                        # Prune resources when they are removed from the repo
-      selfHeal: true                                     # Self-healing to ensure desired state
-  # Child applications
+    automated:
+      prune: true
+      selfHeal: true
+  # Define each application here
   sources:
-    - name: namespace
-      source:
+    - source:
         repoURL: https://github.com/yair232/status-page.git
         path: k8s/namespace
         targetRevision: HEAD
       destination:
-        server: https://kubernetes.default.svc
         namespace: default
-      syncWave: "0"
-
-    - name: monitor
-      source:
+        server: https://kubernetes.default.svc
+      syncWave: '0'
+      
+    - source:
         repoURL: https://github.com/yair232/status-page.git
         path: k8s/monitor
         targetRevision: HEAD
       destination:
-        server: https://kubernetes.default.svc
         namespace: monitoring
-      syncWave: "1"
-
-    - name: prometheus-stack
-      source:
+        server: https://kubernetes.default.svc
+      syncWave: '1'
+      
+    - source:
         repoURL: https://github.com/yair232/status-page.git
         path: k8s/monitor/kube-prometheus-stack
         targetRevision: HEAD
         helm:
           valueFiles:
-            - prom-values.yaml                           # Specify the values file
+            - prom-values.yaml
       destination:
-        server: https://kubernetes.default.svc
         namespace: monitoring
-      syncWave: "2"
-
-    - name: app-deployment
-      source:
+        server: https://kubernetes.default.svc
+      syncWave: '2'
+      
+    - source:
         repoURL: https://github.com/yair232/status-page.git
         path: k8s/app
         targetRevision: HEAD
       destination:
-        server: https://kubernetes.default.svc
         namespace: default
-      syncWave: "3"
-
-    - name: nginx-exporter
-      source:
+        server: https://kubernetes.default.svc
+      syncWave: '3'
+      
+    - source:
         repoURL: https://github.com/yair232/status-page.git
         path: k8s/monitor/prometheus-nginx-exporter
         targetRevision: HEAD
         helm:
           valueFiles:
-            - values-nginx.yaml                         # Specify the values file
+            - values-nginx.yaml
       destination:
-        server: https://kubernetes.default.svc
         namespace: monitoring
-      syncWave: "4"
-
-    - name: redis-exporter
-      source:
+        server: https://kubernetes.default.svc
+      syncWave: '4'
+      
+    - source:
         repoURL: https://github.com/yair232/status-page.git
         path: k8s/monitor/prometheus-redis-exporter
         targetRevision: HEAD
         helm:
           valueFiles:
-            - values-redis.yaml                         # Specify the values file
+            - values-redis.yaml
       destination:
-        server: https://kubernetes.default.svc
         namespace: monitoring
-      syncWave: "5"
-
+        server: https://kubernetes.default.svc
+      syncWave: '5'
