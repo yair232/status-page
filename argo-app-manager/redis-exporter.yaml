@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis-exporter
+  namespace: argocd
+spec:
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    repoURL: https://github.com/yair232/status-page.git
+    path: k8s/monitor/prometheus-redis-exporter
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values-redis.yaml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  syncWave: '5'
