@@ -18,7 +18,7 @@ variable "security_group_ids" {
 variable "cluster_name" {
   description = "The name of the EKS cluster"
   type        = string
-  default     = "my-eks-cluster"
+  default     = "y-r-cluster"
 }
 
 variable "eks_cluster_role_arn" {
@@ -30,7 +30,7 @@ variable "eks_cluster_role_arn" {
 variable "node_group_name" {
   description = "The name of the EKS node group"
   type        = string
-  default     = "my-eks-node-group"
+  default     = "y-r-eks-node-group"
 }
 
 variable "eks_node_group_role_arn" {

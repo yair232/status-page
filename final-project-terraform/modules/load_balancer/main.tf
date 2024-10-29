@@ -3,7 +3,7 @@ module "iam" {
 }
 
 resource "aws_elb" "this" {
-  name               = "my-load-balancer"
+  name               = "y-r-load-balancer"
   subnets            = var.subnet_ids
 
   listener {
@@ -23,5 +23,6 @@ resource "aws_elb" "this" {
 
   tags = {
     Name = "Y-R-LoadBalancer"
+    Project = "TeamE"
   }
 }

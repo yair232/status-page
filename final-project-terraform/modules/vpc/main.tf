@@ -6,7 +6,8 @@ resource "aws_vpc" "main" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "Y&R VPC"
+    Name    = "Y-R VPC"
+    Project = "TeamE"
   }
 }
 
@@ -14,7 +15,8 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "Y&R IGW"
+    Name    = "Y-R IGW"
+    Project = "TeamE"
   }
 }
 
@@ -27,7 +29,8 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "Y&R Public Subnet ${count.index + 1}"
+    Name    = "Y-R Public Subnet ${count.index + 1}"
+    Project = "TeamE"
   }
 }
 
@@ -40,7 +43,8 @@ resource "aws_route_table" "public" {
   }
 
   tags = {
-    Name = "Y&R Public Route Table"
+    Name    = "Y&R Public Route Table"
+    Project = "TeamE"
   }
 }
 
@@ -57,7 +61,8 @@ resource "aws_subnet" "private" {
   availability_zone = element(data.aws_availability_zones.available.names, count.index)
 
   tags = {
-    Name = "Y&R Private Subnet ${count.index + 1}"
+    Name = "Y-R Private Subnet ${count.index + 1}"
+    Project = "TeamE"
   }
 }
 
@@ -65,7 +70,8 @@ resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "Y&R Private Route Table"
+    Name    = "Y-R Private Route Table"
+    Project = "TeamE"
   }
 }
 
@@ -77,7 +83,8 @@ resource "aws_route_table_association" "private_subnet" {
 
 resource "aws_eip" "nat" {
   tags = {
-    Name = "Y&R NAT EIP"
+    Name = "Y-R NAT EIP"
+    Project = "TeamE"
   }
 }
 
@@ -86,7 +93,8 @@ resource "aws_nat_gateway" "nat" {
   subnet_id     = aws_subnet.public[0].id
 
   tags = {
-    Name = "Y&R NAT Gateway"
+    Name = "Y-R NAT Gateway"
+    Project = "TeamE"
   }
 }
 

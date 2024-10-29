@@ -18,7 +18,8 @@ resource "aws_security_group" "app_security_group" {
   }
 
   tags = {
-    Name = "Y&R Application Security Group"
+    Name = "Y-R Application Security Group"
+    Project = "TeamE"
   }
 }
 
@@ -56,6 +57,7 @@ resource "aws_security_group" "eks_node_sg" {
   }
 
   tags = {
-    Name = "Y&R-EKS-Node-SG"
+    Name = "Y-R-EKS-Node-SG"
+    Project = "TeamE"
   }
 }

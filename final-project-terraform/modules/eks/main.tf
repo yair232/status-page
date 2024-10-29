@@ -8,7 +8,8 @@ resource "aws_eks_cluster" "this" {
   }
 
   tags = {
-    Name = "EKS Cluster"
+    Name    = "Y R EKS Cluster"
+    Project = "TeamE"
   }
 }
 
@@ -29,7 +30,8 @@ resource "aws_eks_node_group" "this" {
   ami_type = "AL2_x86_64"
 
   tags = {
-    Name = "EKS Node Group"
+    Name    = "Y R EKS Node Group"
+    Project = "TeamE"
   }
 
   depends_on = [

@@ -3,7 +3,8 @@ resource "aws_db_subnet_group" "db_subnet_group" {
   subnet_ids = var.private_subnet_ids  # Use only private subnets
 
   tags = {
-    Name = "RDS Private Subnet Group"
+    Name = "Y R RDS Private Subnet Group"
+    Project = "TeamE"
   }
 }
 
@@ -31,10 +32,10 @@ resource "aws_security_group" "db_SG" {
 resource "aws_db_instance" "db_insta" {
   engine                 = "postgres"
   db_name                = var.db_name
-  identifier             = "statuspage"
+  identifier             = "y-r-id"
   instance_class         = var.db_instance_class
   allocated_storage      = var.allocated_storage
-  publicly_accessible    = false  # RDS should be private
+  publicly_accessible    = false # Keep it private :)
   username               = var.db_username
   password               = var.db_password
   vpc_security_group_ids = [aws_security_group.db_SG.id]
@@ -43,6 +44,7 @@ resource "aws_db_instance" "db_insta" {
   multi_az               = true
 
   tags = {
-    Name = "Y-R-db"
+    Name    = "Y-R-db"
+    Project = "TeamE"
   }
 }

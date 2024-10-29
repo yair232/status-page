@@ -1,6 +1,6 @@
 # IAM Role for EKS Cluster (create without conditional check for now)
 resource "aws_iam_role" "eks_cluster_role" {
-  name_prefix = "eks-cluster-role-"
+  name_prefix = "y-r-eks-cluster-role-"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -17,7 +17,8 @@ resource "aws_iam_role" "eks_cluster_role" {
   })
 
   tags = {
-    Name = "Y-R-EKS-Cluster-Role"
+    Name    = "Y-R-EKS-Cluster-Role"
+    Project = "TeamE"
   }
 
   lifecycle {
@@ -33,7 +34,7 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
 
 # IAM Role for Node Group (create without conditional check for now)
 resource "aws_iam_role" "eks_node_group_role" {
-  name_prefix = "eks-node-group-role-"
+  name_prefix = "y-r-eks-node-group-role-"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -50,7 +51,8 @@ resource "aws_iam_role" "eks_node_group_role" {
   })
 
   tags = {
-    Name = "Y-R-EKS-Node-Group-Role"
+    Name    = "Y-R-EKS-Node-Group-Role"
+    Project = "TeamE"
   }
 
   lifecycle {
@@ -77,7 +79,7 @@ resource "aws_iam_role_policy_attachment" "ecr_read_only" {
 
 # ELB Management Policy
 resource "aws_iam_policy" "elb_policy" {
-  name_prefix  = "ELBManagementPolicy-"
+  name_prefix  = "y-r-ELBManagementPolicy-"
   description  = "IAM policy for managing Elastic Load Balancer"
   policy       = jsonencode({
     Version = "2012-10-17",
@@ -98,7 +100,7 @@ resource "aws_iam_policy" "elb_policy" {
 
 # ELB Management Role
 resource "aws_iam_role" "elb_role" {
-  name_prefix = "ELBManagementRole-"
+  name_prefix = "y-r-ELBManagementRole-"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [

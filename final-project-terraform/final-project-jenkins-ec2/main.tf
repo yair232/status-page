@@ -5,8 +5,10 @@ provider "aws" {
 # Create a VPC for Jenkins with a non-overlapping CIDR block
 resource "aws_vpc" "jenkins_vpc" {
   cidr_block = var.vpc_cidr_block
+
   tags = {
-    Name = var.vpc_name
+    Name    = var.vpc_name
+    Project = "TeamE"
   }
 }
 
@@ -18,7 +20,8 @@ resource "aws_subnet" "public_subnet" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "JenkinsPublicSubnet"
+    Name    = "y-r-JenkinsPublicSubnet"
+    Project = "TeamE"
   }
 }
 
@@ -29,7 +32,8 @@ resource "aws_subnet" "private_subnet" {
   availability_zone = var.availability_zone
 
   tags = {
-    Name = "JenkinsPrivateSubnet"
+    Name    = "y-r-JenkinsPrivateSubnet"
+    Project = "TeamE"
   }
 }
 
@@ -38,7 +42,8 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.jenkins_vpc.id
 
   tags = {
-    Name = "JenkinsInternetGateway"
+    Name    = "y-r-JenkinsIGW"
+    Project = "TeamE"
   }
 }
 
@@ -52,7 +57,8 @@ resource "aws_route_table" "public_route_table" {
   }
 
   tags = {
-    Name = "PublicRouteTable"
+    Name = "y-r-PublicRouteTable"
+    Project = "TeamE"
   }
 }
 
@@ -102,7 +108,8 @@ resource "aws_security_group" "jenkins_sg" {
   }
 
   tags = {
-    Name = var.security_group_name
+    Name    = var.security_group_name
+    Project = "TeamE"
   }
 }
 
@@ -117,7 +124,8 @@ resource "aws_instance" "jenkins_ec2" {
   key_name = var.key_name
 
   tags = {
-    Name = var.ec2_name
+    Name    = var.ec2_name
+    Project = "TeamE"
   }
 
   # Install Jenkins via user_data script
@@ -140,7 +148,7 @@ resource "aws_instance" "jenkins_ec2" {
     sudo apt-get install git
     # Install Python & Modules
     sudo apt-get install -y python3
-    sudo apt-get install -y python3-pip 
+    sudo apt-get install -y python3-pip
     sudo pip3 install pytest
   EOF
 }

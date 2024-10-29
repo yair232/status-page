@@ -58,12 +58,12 @@ variable "security_group_name" {
 variable "vpc_name" {
   description = "The tag for the Jenkins VPC"
   type        = string
-  default     = "TeamE-JenkinsVPC"
+  default     = "y-r-JenkinsVPC"
 }
 
 # Tag for Jenkins EC2
 variable "ec2_name" {
   description = "The tag name for Jenkins EC2 instance"
   type        = string
-  default     = "JenkinsServer"
+  default     = "y-r-JenkinsServer"
 }
