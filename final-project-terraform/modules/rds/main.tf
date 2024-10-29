@@ -32,7 +32,7 @@ resource "aws_security_group" "db_SG" {
 resource "aws_db_instance" "db_insta" {
   engine                 = "postgres"
   db_name                = var.db_name
-  identifier             = "y-r-id"
+  identifier             = "y-r"
   instance_class         = var.db_instance_class
   allocated_storage      = var.allocated_storage
   publicly_accessible    = false # Keep it private :)
