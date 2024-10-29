@@ -18,17 +18,10 @@ spec:
           image: yair23/nginx:latest # Use your new image here
           ports:
             - containerPort: 80
-          volumeMounts:
-            - name: static-files
-              mountPath: /opt/status-page/statuspage/static # Path where NGINX will look for static files
           resources:
             requests:
-              cpu: "100m"    # Request for CPU resources
+              cpu: "100m" # Request for CPU resources
               memory: "128Mi" # Request for memory resources
             limits:
-              cpu: "500m"    # Limit for CPU resources
+              cpu: "500m" # Limit for CPU resources
               memory: "256Mi" # Limit for memory resources
-      volumes:
-        - name: static-files
-          persistentVolumeClaim:
-            claimName: static-pvc

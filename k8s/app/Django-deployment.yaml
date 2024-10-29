@@ -15,12 +15,9 @@ spec:
     spec:
       containers:
         - name: django
-          image: yair23/statuspage:latest
+          image: yair23/statuspage-check:latest
           ports:
             - containerPort: 8000
-          volumeMounts:
-            - name: static-files
-              mountPath: /opt/status-page/statuspage/static
           resources:
             requests:
               cpu: "100m" # Start with a light CPU footprint
@@ -37,7 +34,4 @@ spec:
             periodSeconds: 10 # Probe every 10 seconds
             failureThreshold: 5 # Fail if 5 consecutive probes fail
             timeoutSeconds: 5 # Timeout if the probe doesn't respond within 5 seconds
-      volumes:
-        - name: static-files
-          persistentVolumeClaim:
-            claimName: static-pvc
+
