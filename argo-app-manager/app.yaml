@@ -21,4 +21,4 @@ spec:
   syncWave: '3'
   hooks:
    - type: PostSync
-     command: ["sh", "-c", "echo 'Waiting 250 seconds before proceeding...'; sleep 10"]
+     command: ["sh", "-c", "echo 'Waiting 10 seconds before proceeding...'; sleep 10"]
