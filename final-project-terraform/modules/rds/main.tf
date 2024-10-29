@@ -42,6 +42,8 @@ resource "aws_db_instance" "db_insta" {
   db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
   skip_final_snapshot    = true
   multi_az               = true
+  snapshot_identifier    = "arn:aws:rds:us-east-1:992382545251:snapshot:y-r-superuser"
+
 
   tags = {
     Name    = "Y-R-db"
