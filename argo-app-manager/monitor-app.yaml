@@ -15,6 +15,7 @@ spec:
   syncPolicy:
     syncOptions:
       - "ServerSideApply=true"
+      - "ForceConflicts=true"
     automated:
       prune: true
       selfHeal: true
