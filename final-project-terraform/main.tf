@@ -48,4 +48,4 @@ module "eks" {
 #   vpc_id      = module.vpc.vpc_id
 #   subnet_ids  = module.vpc.public_subnet_ids
 #   depends_on  = [module.vpc, module.eks]
-}
+#}
