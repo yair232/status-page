@@ -19,7 +19,9 @@ spec:
     automated:
       prune: true
       selfHeal: true
-  syncWave: "1"
+  syncWave: "3"
   hooks:
+    - type: PreSync
+      command: ["sh", "-c", "echo 'Waiting for Django and app.yaml readiness...'; until kubectl get pods -n default -l app=django -o jsonpath='{.items[0].status.containerStatuses[0].ready}' | grep true && kubectl get pods -n default -l app=app -o jsonpath='{.items[0].status.containerStatuses[0].ready}' | grep true; do sleep 5; done"]
     - type: PostSync
       command: ["sh", "-c", "echo 'Waiting 250 seconds before proceeding...'; sleep 250"]
