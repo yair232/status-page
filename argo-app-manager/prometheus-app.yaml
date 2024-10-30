@@ -21,7 +21,7 @@ spec:
       selfHeal: true
     syncOptions:
       - "ServerSideApply=true"
-  syncWave: "2"
+  syncWave: "1"
   hooks:
     - type: PostSync
       command: ["sh", "-c", "echo 'Waiting 250 seconds before proceeding...'; sleep 250"]
