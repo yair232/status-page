@@ -26,13 +26,13 @@ variable "private_subnets_cidr" {
 variable "cluster_name" {
   description = "The name of the EKS cluster."
   type        = string
-  default     = "my-eks-cluster"
+  default     = "y-r-cluster"
 }
 
 variable "node_group_name" {
   description = "The name of the EKS node group."
   type        = string
-  default     = "my-eks-node-group"
+  default     = "y-r-eks-node-group"
 }
 
 variable "node_instance_type" {
