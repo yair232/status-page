@@ -2,10 +2,9 @@ import pytest
 import os
 import py_compile
 
-# List of files to check for syntax errors
+# List of files to check, including only Python files
 files_to_check = [
     'statuspage/manage.py',
-    'upgrade.sh',
     'contrib/gunicorn.py'
 ]
 
