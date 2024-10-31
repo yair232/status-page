@@ -89,10 +89,43 @@ resource "aws_iam_role" "aws_load_balancer_controller" {
   }
 }
 
-# Attach Policy to AWS Load Balancer Controller Role
+# Data source to check if AWS-managed Load Balancer Controller Policy exists
+data "aws_iam_policy" "aws_load_balancer_controller_policy" {
+  arn   = "arn:aws:iam::aws:policy/AWSLoadBalancerControllerIAMPolicy"
+  count = length(try(data.aws_iam_policy.aws_load_balancer_controller_policy, [])) > 0 ? 1 : 0
+}
+
+# Custom Fallback Policy for AWS Load Balancer Controller
+resource "aws_iam_policy" "custom_load_balancer_controller_policy" {
+  name        = "CustomAWSLoadBalancerControllerPolicy"
+  description = "Custom policy for AWS Load Balancer Controller with necessary permissions"
+  policy      = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "ec2:*",
+          "elasticloadbalancing:*",
+          "iam:CreateServiceLinkedRole",
+          "cognito-idp:DescribeUserPoolClient",
+          "waf-regional:*",
+          "wafv2:*",
+          "shield:*"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# Attach Policy to AWS Load Balancer Controller Role with fallback
 resource "aws_iam_role_policy_attachment" "aws_load_balancer_controller_policy" {
   role       = aws_iam_role.aws_load_balancer_controller.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSLoadBalancerControllerIAMPolicy"
+  policy_arn = coalesce(
+    data.aws_iam_policy.aws_load_balancer_controller_policy[0].arn,
+    aws_iam_policy.custom_load_balancer_controller_policy.arn
+  )
 }
 
 # ELB Management Policy
@@ -139,4 +172,3 @@ resource "aws_iam_role_policy_attachment" "elb_attachment" {
   policy_arn = aws_iam_policy.elb_policy.arn
   role       = aws_iam_role.elb_role.name
 }
-
