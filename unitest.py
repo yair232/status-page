@@ -2,14 +2,16 @@ import pytest
 import os
 import py_compile
 
-# List of files to check, including only Python files
-files_to_check = [
-    'statuspage/manage.py',
-    'contrib/gunicorn.py'
-]
+def find_python_files(directory="."):
+    """Recursively find all .py files in the given directory."""
+    python_files = []
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.endswith(".py"):
+                python_files.append(os.path.join(root, file))
+    return python_files
 
-@pytest.mark.parametrize("file_path", files_to_check)
+@pytest.mark.parametrize("file_path", find_python_files())
 def test_syntax(file_path):
-    """Test that each specified Python file has no syntax errors."""
-    assert os.path.isfile(file_path), f"{file_path} file not found"
+    """Check each Python file for syntax errors."""
     py_compile.compile(file_path, doraise=True)
