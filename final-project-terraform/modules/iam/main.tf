@@ -54,24 +54,21 @@ resource "aws_iam_role" "eks_node_group_role" {
 resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
   role       = aws_iam_role.eks_node_group_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  depends_on = [aws_iam_role.eks_node_group_role]
 }
 
 resource "aws_iam_role_policy_attachment" "eks_cni_policy" {
   role       = aws_iam_role.eks_node_group_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  depends_on = [aws_iam_role.eks_node_group_role]
 }
 
 resource "aws_iam_role_policy_attachment" "ecr_read_only" {
   role       = aws_iam_role.eks_node_group_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  depends_on = [aws_iam_role.eks_node_group_role]
 }
 
 # IAM Role for AWS Load Balancer Controller
 resource "aws_iam_role" "aws_load_balancer_controller" {
-  name_prefix = "y-r-eks-load-balancer-controller-role-"
+  name_prefix = "LoadBalancerControllerRoleY-R-"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -96,12 +93,11 @@ resource "aws_iam_role" "aws_load_balancer_controller" {
 resource "aws_iam_role_policy_attachment" "aws_load_balancer_controller_policy" {
   role       = aws_iam_role.aws_load_balancer_controller.name
   policy_arn = "arn:aws:iam::aws:policy/AWSLoadBalancerControllerIAMPolicy"
-  depends_on = [aws_iam_role.aws_load_balancer_controller]
 }
 
 # ELB Management Policy
 resource "aws_iam_policy" "elb_policy" {
-  name_prefix  = "y-r-elb-management-policy-"
+  name_prefix  = "y-r-ELBManagementPolicy-"
   description  = "IAM policy for managing Elastic Load Balancer"
   policy       = jsonencode({
     Version = "2012-10-17",
@@ -122,7 +118,7 @@ resource "aws_iam_policy" "elb_policy" {
 
 # ELB Management Role
 resource "aws_iam_role" "elb_role" {
-  name_prefix = "y-r-elb-management-role-"
+  name_prefix = "y-r-ELBManagementRole-"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -136,23 +132,17 @@ resource "aws_iam_role" "elb_role" {
       }
     ]
   })
-
-  tags = {
-    Name    = "Y-R-ELB-Management-Role"
-    Project = "TeamE"
-  }
 }
 
 # Attach ELB Management Policy to Role
 resource "aws_iam_role_policy_attachment" "elb_attachment" {
   policy_arn = aws_iam_policy.elb_policy.arn
   role       = aws_iam_role.elb_role.name
-  depends_on = [aws_iam_policy.elb_policy, aws_iam_role.elb_role]
 }
 
 # State Management Commands (use these if necessary)
 # terraform state list
-# terraform state rm aws_iam_policy.elb_policy
-# terraform state rm aws_iam_role.eks_cluster_role
-# terraform state rm aws_iam_role.eks_node_group_role
-# terraform state rm aws_iam_role.elb_role
+# terraform state rm module.iam.aws_iam_policy.elb_policy
+# terraform state rm module.iam.aws_iam_role.eks_cluster_role
+# terraform state rm module.iam.aws_iam_role.eks_node_group_role
+# terraform state rm module.iam.aws_iam_role.elb_role
