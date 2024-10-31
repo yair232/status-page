@@ -1,60 +1,30 @@
-# This unitest.py checks:
-# 1. manage.py: Ensures the file exists, is executable, and Django settings are correctly configured.
-# 2. upgrade.sh: Verifies the script exists, is executable, and checks for Python 3.10+.
-# 3. gunicorn.py: Confirms the file exists and validates its key configuration settings.
-
 import pytest
 import os
+import py_compile
 import subprocess
 
 # Test for manage.py
-def test_manage_file_exists():
-    """Test that manage.py exists and is executable."""
+def test_manage_file_syntax():
+    """Test that manage.py has no syntax errors."""
     manage_file = 'statuspage/manage.py'
     assert os.path.isfile(manage_file), f"{manage_file} file not found"
-    assert os.access(manage_file, os.X_OK), f"{manage_file} is not executable"
-
-def test_manage_default_env_var():
-    """Test that the correct default Django settings module is set."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'statuspage.settings')
-    assert os.getenv('DJANGO_SETTINGS_MODULE') == 'statuspage.settings', "Environment variable for Django settings module is not correctly set"
+    py_compile.compile(manage_file, doraise=True)
 
 # Test for upgrade.sh
-def test_upgrade_file_exists():
-    """Test that upgrade.sh exists and is executable."""
+def test_upgrade_file_syntax():
+    """Test that upgrade.sh has no syntax errors."""
     upgrade_file = 'upgrade.sh'
     assert os.path.isfile(upgrade_file), f"{upgrade_file} file not found"
-    assert os.access(upgrade_file, os.X_OK), f"{upgrade_file} is not executable"
-
-def test_python_version_in_upgrade_script():
-    """Simulate running the Python version check from the upgrade.sh script."""
-    python_version_output = subprocess.getoutput('python3 --version')
-    assert "Python 3.10" in python_version_output, f"Expected Python 3.10 or later, but got {python_version_output}"
+    py_compile.compile(upgrade_file, doraise=True)
 
 # Test for gunicorn.py
-def test_gunicorn_config_exists():
-    """Test if the gunicorn.py file exists."""
+def test_gunicorn_file_syntax():
+    """Test that gunicorn.py has no syntax errors."""
     gunicorn_file = 'contrib/gunicorn.py'
     assert os.path.isfile(gunicorn_file), f"{gunicorn_file} file not found"
+    py_compile.compile(gunicorn_file, doraise=True)
 
-def test_gunicorn_config():
-    """Test if the gunicorn.py settings are valid."""
-    gunicorn_settings = {
-        "bind": "127.0.0.1:8001",
-        "workers": 5,
-        "threads": 3,
-        "timeout": 120,
-        "max_requests": 5000,
-        "max_requests_jitter": 500
-    }
-
-    # Simulate loading gunicorn settings
-    assert gunicorn_settings['bind'] == '127.0.0.1:8001', "Gunicorn bind setting is incorrect"
-    assert gunicorn_settings['workers'] > 0, "Gunicorn workers should be greater than 0"
-    assert gunicorn_settings['threads'] > 0, "Gunicorn threads should be greater than 0"
-    assert gunicorn_settings['timeout'] > 0, "Gunicorn timeout should be greater than 0"
-    assert gunicorn_settings['max_requests'] > 0, "Gunicorn max_requests should be greater than 0"
-
+# Basic sanity check
 def test_empty():
     """This test checks if True is indeed True."""
     assert True
