@@ -3,15 +3,15 @@ resource "aws_iam_role" "eks_cluster_role" {
   name_prefix = "y-r-eks-cluster-role-"
 
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17",
     Statement = [
       {
-        Action = "sts:AssumeRole"
+        Action = "sts:AssumeRole",
         Principal = {
           Service = "eks.amazonaws.com"
-        }
+        },
         Effect = "Allow"
-      },
+      }
     ]
   })
 
@@ -32,15 +32,15 @@ resource "aws_iam_role" "eks_node_group_role" {
   name_prefix = "y-r-eks-node-group-role-"
 
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17",
     Statement = [
       {
-        Action = "sts:AssumeRole"
+        Action = "sts:AssumeRole",
         Principal = {
           Service = "ec2.amazonaws.com"
-        }
+        },
         Effect = "Allow"
-      },
+      }
     ]
   })
 
@@ -71,7 +71,7 @@ resource "aws_iam_role" "aws_load_balancer_controller" {
   name_prefix = "LoadBalancerControllerRoleY-R-"
 
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17",
     Statement = [
       {
         Effect = "Allow",
@@ -140,9 +140,3 @@ resource "aws_iam_role_policy_attachment" "elb_attachment" {
   role       = aws_iam_role.elb_role.name
 }
 
-# State Management Commands (use these if necessary)
-# terraform state list
-# terraform state rm module.iam.aws_iam_policy.elb_policy
-# terraform state rm module.iam.aws_iam_role.eks_cluster_role
-# terraform state rm module.iam.aws_iam_role.eks_node_group_role
-# terraform state rm module.iam.aws_iam_role.elb_role
