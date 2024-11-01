@@ -116,4 +116,3 @@ variable "lb_protocol" {
   default     = "HTTP"
 }
 
-
