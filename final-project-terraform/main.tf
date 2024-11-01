@@ -2,6 +2,12 @@ provider "aws" {
   region = var.aws_region
 }
 
+provider "helm" {
+  kubernetes {
+    config_path = "~/.kube/config"
+  }
+}
+
 # VPC Module
 module "vpc" {
   source     = "./modules/vpc"
@@ -36,16 +42,32 @@ module "eks" {
   eks_cluster_role_arn           = module.iam.eks_cluster_role_arn
   eks_node_group_role_arn        = module.iam.eks_node_group_role_arn
 
-  eks_worker_node_policy_attachment = module.iam.eks_worker_node_policy_attachment  
-  eks_cni_policy_attachment         = module.iam.eks_cni_policy_attachment         
-  ecr_read_only_policy_attachment   = module.iam.ecr_read_only_policy_attachment   
+  eks_worker_node_policy_attachment = module.iam.eks_worker_node_policy_attachment
+  eks_cni_policy_attachment         = module.iam.eks_cni_policy_attachment
+  ecr_read_only_policy_attachment   = module.iam.ecr_read_only_policy_attachment
 }
 
+# Helm Installation for Load Balancer Controller
+resource "helm_release" "aws_load_balancer_controller" {
+  name       = "aws-load-balancer-controller"
+  repository = "https://aws.github.io/eks-charts"
+  chart      = "aws-load-balancer-controller"
+  namespace  = "kube-system"
 
-# # Load Balancer Module
-# module "load_balancer" {
-#   source      = "./modules/load_balancer"
-#   vpc_id      = module.vpc.vpc_id
-#   subnet_ids  = module.vpc.public_subnet_ids
-#   depends_on  = [module.vpc, module.eks]
-#}
+  set {
+    name  = "clusterName"
+    value = var.cluster_name
+  }
+
+  set {
+    name  = "serviceAccount.create"
+    value = "false"
+  }
+
+  set {
+    name  = "serviceAccount.name"
+    value = "aws-load-balancer-controller"
+  }
+
+  depends_on = [module.iam, module.eks]
+}
