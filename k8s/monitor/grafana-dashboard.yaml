@@ -1,165 +1,147 @@
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: grafana-dashboard
   namespace: monitoring
   labels:
-    grafana-dashboard: "1"
+    app.kubernetes.io/instance: monitor-app
+    grafana-dashboard: "1"  # Label to enable Grafana sidecar monitoring
 data:
   django-dashboard.json: |-
     {
-        "annotations": {
-          "list": [
-            {
-              "builtIn": 1,
-              "datasource": {
-                "type": "grafana",
-                "uid": "-- Grafana --"
-              },
-              "enable": true,
-              "hide": true,
-              "iconColor": "rgba(0, 211, 255, 1)",
-              "name": "Annotations & Alerts",
-              "type": "dashboard"
-            }
-          ]
-        },
-        "editable": true,
-        "fiscalYearStartMonth": 0,
-        "graphTooltip": 0,
-        "id": 31,
-        "links": [],
-        "panels": [
+      "annotations": {
+        "list": [
           {
+            "builtIn": 1,
             "datasource": {
-              "default": true,
-              "type": "prometheus",
-              "uid": "prometheus"
+              "type": "grafana",
+              "uid": "-- Grafana --"
             },
-            "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" } } },
-            "targets": [
-              {
-                "expr": "histogram_quantile(0.95, sum(rate(django_http_requests_latency_including_middlewares_seconds_bucket[1m])) by (le))",
-                "legendFormat": "__auto"
-              }
-            ],
-            "title": "Request Latency Including Middleware",
-            "type": "timeseries"
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
           }
-        ],
-        "schemaVersion": 39,
-        "title": "Django",
-        "uid": "ae1hebg4po074b",
-        "version": 1
-      }
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/instance: monitor-app
-  name: grafana-nginx-dashboard
-  namespace: monitoring
-data:
+        ]
+      },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": 31,
+      "links": [],
+      "panels": [
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" } } },
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, sum(rate(django_http_requests_latency_including_middlewares_seconds_bucket[1m])) by (le))",
+              "legendFormat": "__auto"
+            }
+          ],
+          "title": "Request Latency Including Middleware",
+          "type": "timeseries"
+        }
+      ],
+      "schemaVersion": 39,
+      "title": "Django",
+      "uid": "ae1hebg4po074b",
+      "version": 1
+    }
   nginx-dashboard.json: |-
     {
-        "annotations": {
-          "list": [
-            {
-              "builtIn": 1,
-              "datasource": {
-                "type": "grafana",
-                "uid": "-- Grafana --"
-              },
-              "enable": true,
-              "hide": true,
-              "iconColor": "rgba(0, 211, 255, 1)",
-              "name": "Annotations & Alerts",
-              "type": "dashboard"
-            }
-          ]
-        },
-        "editable": true,
-        "fiscalYearStartMonth": 0,
-        "graphTooltip": 0,
-        "id": 29,
-        "links": [],
-        "panels": [
+      "annotations": {
+        "list": [
           {
+            "builtIn": 1,
             "datasource": {
-              "default": true,
-              "type": "prometheus",
-              "uid": "prometheus"
+              "type": "grafana",
+              "uid": "-- Grafana --"
             },
-            "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" } } },
-            "targets": [
-              {
-                "expr": "rate(nginx_http_request_duration_seconds_sum[1m]) / rate(nginx_http_request_duration_seconds_count[1m])",
-                "legendFormat": "__auto"
-              }
-            ],
-            "title": "Average Request Duration",
-            "type": "timeseries"
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
           }
-        ],
-        "schemaVersion": 39,
-        "title": "Nginx",
-        "uid": "fe1h8w6eabxfke",
-        "version": 1
-      }
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/instance: monitor-app
-  name: grafana-redis-dashboard
-  namespace: monitoring
-data:
+        ]
+      },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": 29,
+      "links": [],
+      "panels": [
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" } } },
+          "targets": [
+            {
+              "expr": "rate(nginx_http_request_duration_seconds_sum[1m]) / rate(nginx_http_request_duration_seconds_count[1m])",
+              "legendFormat": "__auto"
+            }
+          ],
+          "title": "Average Request Duration",
+          "type": "timeseries"
+        }
+      ],
+      "schemaVersion": 39,
+      "title": "Nginx",
+      "uid": "fe1h8w6eabxfke",
+      "version": 1
+    }
   redis-dashboard.json: |-
     {
-        "annotations": {
-          "list": [
-            {
-              "builtIn": 1,
-              "datasource": {
-                "type": "grafana",
-                "uid": "-- Grafana --"
-              },
-              "enable": true,
-              "hide": true,
-              "iconColor": "rgba(0, 211, 255, 1)",
-              "name": "Annotations & Alerts",
-              "type": "dashboard"
-            }
-          ]
-        },
-        "editable": true,
-        "fiscalYearStartMonth": 0,
-        "graphTooltip": 0,
-        "id": 30,
-        "links": [],
-        "panels": [
+      "annotations": {
+        "list": [
           {
+            "builtIn": 1,
             "datasource": {
-              "default": true,
-              "type": "prometheus",
-              "uid": "prometheus"
+              "type": "grafana",
+              "uid": "-- Grafana --"
             },
-            "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" } } },
-            "targets": [
-              {
-                "expr": "rate(redis_cpu_user_seconds_total[1m]) * 100",
-                "legendFormat": "__auto"
-              }
-            ],
-            "title": "CPU usage",
-            "type": "timeseries"
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
           }
-        ],
-        "schemaVersion": 39,
-        "title": "Redis",
-        "uid": "de1hd251t20hsa",
-        "version": 1
-      }
+        ]
+      },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": 30,
+      "links": [],
+      "panels": [
+        {
+          "datasource": {
+            "default": true,
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" } } },
+          "targets": [
+            {
+              "expr": "rate(redis_cpu_user_seconds_total[1m]) * 100",
+              "legendFormat": "__auto"
+            }
+          ],
+          "title": "CPU usage",
+          "type": "timeseries"
+        }
+      ],
+      "schemaVersion": 39,
+      "title": "Redis",
+      "uid": "de1hd251t20hsa",
+      "version": 1
+    }
