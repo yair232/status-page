@@ -41,19 +41,19 @@ variable "eks_node_group_role_arn" {
 variable "desired_capacity" {
   description = "The desired number of EKS nodes"
   type        = number
-  default     = 2
+  default     = 3
 }
 
 variable "max_size" {
   description = "The maximum number of EKS nodes"
   type        = number
-  default     = 3
+  default     = 4
 }
 
 variable "min_size" {
   description = "The minimum number of EKS nodes"
   type        = number
-  default     = 1
+  default     = 2
 }
 
 variable "node_instance_type" {
