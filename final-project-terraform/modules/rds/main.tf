@@ -1,6 +1,6 @@
 resource "aws_db_subnet_group" "db_subnet_group" {
-  name       = "rds-private-subnet-group"
-  subnet_ids = var.private_subnet_ids  # Use only private subnets
+  name       = "y-r-rds-private-subnet-group"
+  subnet_ids = var.private_subnet_ids   # Use only private subnets
 
   tags = {
     Name = "Y R RDS Private Subnet Group"
@@ -10,7 +10,7 @@ resource "aws_db_subnet_group" "db_subnet_group" {
 
 # RDS Security Group
 resource "aws_security_group" "db_SG" {
-  name_prefix = "db_prefix"
+  name_prefix = "db-SG-"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -25,6 +25,10 @@ resource "aws_security_group" "db_SG" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name    = "Y-R DB Security Group"
+    Project = "TeamE"
   }
 }
 
@@ -49,4 +53,5 @@ resource "aws_db_instance" "db_insta" {
     Name    = "Y-R-db"
     Project = "TeamE"
   }
+  depends_on = [aws_db_subnet_group.db_subnet_group]
 }

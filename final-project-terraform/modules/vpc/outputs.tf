@@ -3,14 +3,15 @@ output "vpc_id" {
 }
 
 output "public_subnet_ids" {
-  value = aws_subnet.public[*].id
+  value = [for subnet in values(aws_subnet.public) : subnet.id]
 }
 
 output "private_subnet_ids" {
-  value = aws_subnet.private[*].id
+  value = [for subnet in values(aws_subnet.private) : subnet.id]
 }
 
-output "app_security_group_id" {
-  value = aws_security_group.app_security_group.id
+output "eks_node_sg_id" {
+  description = "The security group ID for the EKS worker nodes."
+  value       = aws_security_group.eks_node_sg.id
 }
 

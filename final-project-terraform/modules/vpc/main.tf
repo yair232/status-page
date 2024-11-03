@@ -1,4 +1,11 @@
-data "aws_availability_zones" "available" {}
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+# Limit to the first two AZs
+locals {
+  selected_azs = slice(data.aws_availability_zones.available.names, 0, 2)
+}
 
 # VPC
 resource "aws_vpc" "main" {
@@ -24,16 +31,16 @@ resource "aws_internet_gateway" "igw" {
   depends_on = [aws_vpc.main]
 }
 
-# Public Subnets
+# Public Subnets (2 subnets, one in each selected AZ)
 resource "aws_subnet" "public" {
-  count             = 2
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = cidrsubnet(var.cidr_block, 8, count.index)
-  availability_zone = element(data.aws_availability_zones.available.names, count.index)
-  map_public_ip_on_launch = true
+  for_each                 = toset(local.selected_azs)
+  vpc_id                   = aws_vpc.main.id
+  cidr_block               = cidrsubnet(var.cidr_block, 8, index(local.selected_azs, each.key))
+  availability_zone        = each.key
+  map_public_ip_on_launch  = true
 
   tags = {
-    Name    = "Y-R Public Subnet ${count.index + 1}"
+    Name    = "Y-R Public Subnet ${each.key}"
     Project = "TeamE"
   }
 
@@ -59,22 +66,22 @@ resource "aws_route_table" "public" {
 
 # Associate Public Subnets with Public Route Table
 resource "aws_route_table_association" "public_subnet" {
-  count = length(aws_subnet.public)
-  subnet_id = aws_subnet.public[count.index].id
+  for_each       = aws_subnet.public
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
 
   depends_on = [aws_route_table.public, aws_subnet.public]
 }
 
-# Private Subnets
+# Private Subnets (2 subnets, one in each selected AZ)
 resource "aws_subnet" "private" {
-  count             = 2
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = cidrsubnet(var.cidr_block, 8, count.index + 2)
-  availability_zone = element(data.aws_availability_zones.available.names, count.index)
+  for_each                 = toset(local.selected_azs)
+  vpc_id                   = aws_vpc.main.id
+  cidr_block               = cidrsubnet(var.cidr_block, 8, index(local.selected_azs, each.key) + 2)
+  availability_zone        = each.key
 
   tags = {
-    Name    = "Y-R Private Subnet ${count.index + 1}"
+    Name    = "Y-R Private Subnet ${each.key}"
     Project = "TeamE"
   }
 
@@ -95,8 +102,8 @@ resource "aws_route_table" "private" {
 
 # Associate Private Subnets with Private Route Table
 resource "aws_route_table_association" "private_subnet" {
-  count = length(aws_subnet.private)
-  subnet_id = aws_subnet.private[count.index].id
+  for_each       = aws_subnet.private
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.private.id
 
   depends_on = [aws_route_table.private, aws_subnet.private]
@@ -115,12 +122,13 @@ resource "aws_eip" "nat" {
 # NAT Gateway in the first Public Subnet
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.public[0].id
+  subnet_id     = values(aws_subnet.public)[0].id
 
   tags = {
     Name    = "Y-R NAT Gateway"
     Project = "TeamE"
   }
+
   depends_on = [
     aws_internet_gateway.igw,
     aws_subnet.public,
