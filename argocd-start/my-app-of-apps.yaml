@@ -14,7 +14,4 @@ spec:
     repoURL: https://github.com/yair232/status-page.git
     path: argo-app-manager
     targetRevision: HEAD
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+  syncPolicy: {}
