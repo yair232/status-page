@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: logging
+  name: elasticsearch
   namespace: argocd
 spec:
   destination:
@@ -10,12 +10,16 @@ spec:
   project: default
   source:
     repoURL: https://github.com/yair232/status-page.git
-    path: k8s/logging
+    path: k8s/elasticsearch
     targetRevision: HEAD
   syncPolicy:
-    syncOptions:
-      - "ServerSideApply=true"
     automated:
       prune: true
       selfHeal: true
-  syncWave: '6'
+  ignoreDifferences:
+    - group: "apps"
+      kind: "StatefulSet"
+      jsonPointers:
+        - "/metadata/managedFields"
+        - "/metadata/resourceVersion"
+        - "/status"
