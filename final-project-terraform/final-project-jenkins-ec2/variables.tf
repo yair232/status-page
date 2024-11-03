@@ -37,14 +37,14 @@ variable "availability_zone" {
 variable "instance_type" {
   description = "The instance type for the Jenkins EC2 instance"
   type        = string
-  default     = "t2.micro"
+  default     = "t3.medium"
 }
 
 # Name of the SSH key pair to access EC2 instance
 variable "key_name" {
   description = "The name of the SSH key pair to use for the Jenkins EC2 instance"
   type        = string
-  default     = "Ron1"
+  default     = "keypem-Ron1"
 }
 
 # Jenkins Security Group Name
