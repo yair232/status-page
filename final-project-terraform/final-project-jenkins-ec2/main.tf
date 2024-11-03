@@ -115,47 +115,91 @@ resource "aws_security_group" "jenkins_sg" {
 
 # Create an EC2 instance for Jenkins
 resource "aws_instance" "jenkins_ec2" {
-  ami           = data.aws_ssm_parameter.ubuntu_ami.value
-  instance_type = var.instance_type
-  subnet_id     = aws_subnet.public_subnet.id
+  ami                    = data.aws_ssm_parameter.ubuntu_ami.value
+  instance_type          = var.instance_type
+  subnet_id              = aws_subnet.public_subnet.id
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
+  key_name               = var.key_name
 
-
-  key_name = var.key_name
+  # Add root volume with a 30 GB size
+  root_block_device {
+    volume_size = 30  # Set the size of the root volume to 30 GB
+    volume_type = "gp3"  # Specify volume type (e.g., gp3 for General Purpose SSD)
+  }
 
   tags = {
     Name    = var.ec2_name
     Project = "TeamE"
   }
 
-  # Install Jenkins via user_data script
+  # Install Jenkins and restore backup via user_data script
   user_data = <<-EOF
-    #!/bin/bash
-    sudo apt update -y
-    sudo apt install -y openjdk-11-jdk
+  #!/bin/bash
+  set -e
 
-    # Add Jenkins key and repository
-    sudo wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
-    echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/" | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+  # Update package list and install core utilities
+  sudo apt update -y
+  sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
 
-    # Install Jenkins
-    sudo apt-get update
-    sudo apt-get install -y jenkins
+  # Install OpenJDK
+  sudo apt install -y openjdk-17-jdk
 
-    # Enable and start Jenkins
-    sudo systemctl enable jenkins
-    sudo systemctl start jenkins
-    sudo apt-get install git
-    # Install Python & Modules
-    sudo apt-get install -y python3
-    sudo apt-get install -y python3-pip
-    sudo pip3 install pytest
-  EOF
+  # Install Docker
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
+  sudo apt-get update
+  sudo apt-get install -y docker-ce
+
+  # Add jenkins user to the docker group
+  sudo usermod -aG docker jenkins
+
+  # Download and install Terraform
+  curl -LO "https://releases.hashicorp.com/terraform/1.6.3/terraform_1.6.3_linux_amd64.zip"
+  unzip terraform_1.6.3_linux_amd64.zip
+  sudo mv terraform /usr/local/bin/
+  rm terraform_1.6.3_linux_amd64.zip  # Cleanup
+
+  # Download Kubectl
+  curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+  chmod +x kubectl
+  sudo mv kubectl /usr/local/bin/
+  kubectl version --client
+
+  # Download AWS CLI
+  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  unzip awscliv2.zip
+  sudo ./aws/install
+  rm awscliv2.zip
+
+  # Add Jenkins key and repository
+  sudo wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+  echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/" | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+  # Install Jenkins
+  sudo apt-get update
+  sudo apt-get install -y jenkins
+
+  # Enable and start Jenkins
+  sudo systemctl enable jenkins
+  sudo systemctl start jenkins
+
+  # Install Python and related modules
+  sudo apt-get install -y python3 python3-pip
+  sudo pip3 install pytest
+
+  # Create backup directory if it doesn't exist
+  sudo mkdir -p /var/lib/jenkins/backup
+
+  # Clone the backup repository and copy backups to Jenkins
+  git clone https://github.com/yair232/status-page.git /tmp/jenkins-backup
+  sudo cp -r /tmp/jenkins-backup/status-page/final-project-terraform/Jenkins/backups/* /var/lib/jenkins/backup/ # Adjust as necessary
+
+  # Set proper ownership
+  sudo chown -R jenkins:jenkins /var/lib/jenkins/
+EOF
 }
-# For Jenkins enter to http://<jenkins_ec2_public_ip>:8080
-# **First Setup** On The server use "sudo cat /var/lib/jenkins/secrets/initialAdminPassword" For the admin password to set the login details
-# User Password1234
-# Fetch the latest Ubuntu 20.04 LTS AMI using AWS SSM Parameter Store
+
+# Fetch the latest Ubuntu 22.04 LTS AMI using AWS SSM Parameter Store
 data "aws_ssm_parameter" "ubuntu_ami" {
   name = "/aws/service/canonical/ubuntu/server/22.04/stable/current/amd64/hvm/ebs-gp2/ami-id"
 }
