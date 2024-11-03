@@ -2,7 +2,7 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
-# Limit to the first two AZs
+# Limit to the first two AZs  east-1a --> east-1b ...
 locals {
   selected_azs = slice(data.aws_availability_zones.available.names, 0, 2)
 }
