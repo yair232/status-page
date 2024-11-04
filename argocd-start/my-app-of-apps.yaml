@@ -14,4 +14,8 @@ spec:
     repoURL: https://github.com/yair232/status-page.git
     path: argo-app-manager
     targetRevision: HEAD
-  syncPolicy: {}
+  syncPolicy:
+    automated:
+      prune: true         # Automatically remove resources that are no longer defined in Git
+      selfHeal: true       # Automatically self-heal resources if they drift from the desired state
+
