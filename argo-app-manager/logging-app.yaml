@@ -16,11 +16,10 @@ spec:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - "ServerSideApply=true"
-    # Ignoring specific annotation differences to avoid unnecessary OutOfSync statuses
+    syncOptions: []
     ignoreDifferences:
       - kind: StatefulSet
+        name: elasticsearch
         jsonPointers:
           - /spec/template/metadata/annotations/kubectl.kubernetes.io~1restartedAt
   syncWave: "7"
