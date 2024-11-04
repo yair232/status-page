@@ -43,3 +43,14 @@ spec:
                 name: grafana-svc-bridge
                 port:
                   number: 80
+
+    - host: argocd.cash-gun.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-svc-bridge
+                port:
+                  number: 443
