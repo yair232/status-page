@@ -19,7 +19,7 @@ spec:
     automated:
       prune: true
       selfHeal: true
-  syncWave: '5'
+  syncWave: '8'
   hooks:
    - type: PostSync
      command: ["sh", "-c", "echo 'Waiting 250 seconds before proceeding...'; sleep 10"]
