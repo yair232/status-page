@@ -9,15 +9,6 @@ spec:
     repoURL: https://github.com/yair232/status-page.git
     targetRevision: HEAD
     path: k8s/ingress-app
-    helm:
-      chart: ingress-nginx
-      repoURL: https://kubernetes.github.io/ingress-nginx
-      releaseName: nginx-ingress
-      version: "4.7.1" 
-      values: |-
-        controller:
-          service:
-            externalTrafficPolicy: Local
   destination:
     server: https://kubernetes.default.svc
     namespace: nginx-ingress
@@ -25,4 +16,3 @@ spec:
     automated:
       prune: true
       selfHeal: true
-  syncWave: '7'
