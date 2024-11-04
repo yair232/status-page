@@ -13,9 +13,14 @@ spec:
     path: k8s/logging
     targetRevision: HEAD
   syncPolicy:
-    syncOptions:
-      - "ServerSideApply=true"
     automated:
       prune: true
       selfHeal: true
-  syncWave: '7'
+    syncOptions:
+      - "ServerSideApply=true"
+    # Ignoring specific annotation differences to avoid unnecessary OutOfSync statuses
+    ignoreDifferences:
+      - kind: StatefulSet
+        jsonPointers:
+          - /spec/template/metadata/annotations/kubectl.kubernetes.io~1restartedAt
+  syncWave: "7"
