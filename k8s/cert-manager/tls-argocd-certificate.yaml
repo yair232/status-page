@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tls-argocd-cash-gun
+  namespace: default
+spec:
+  secretName: tls-argocd-cash-gun
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - argocd.cash-gun.com
