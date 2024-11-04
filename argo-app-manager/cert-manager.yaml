@@ -16,4 +16,3 @@ spec:
     automated:
       prune: true
       selfHeal: true
-  syncWave: '1'  # Set a sync wave if needed to ensure correct sequencing
