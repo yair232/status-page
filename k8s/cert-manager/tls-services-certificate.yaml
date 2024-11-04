@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tls-services-cash-gun
+  namespace: default
+spec:
+  secretName: tls-services-cash-gun
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - status-page.cash-gun.com
+    - grafana.cash-gun.com
+    - kibana.cash-gun.com
