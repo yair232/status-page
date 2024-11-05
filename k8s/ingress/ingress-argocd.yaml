@@ -8,8 +8,6 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    nginx.ingress.kubernetes.io/auth-url: "https://argocd.cash-gun.com/oauth2/auth"
-    nginx.ingress.kubernetes.io/auth-signin: "https://argocd.cash-gun.com/oauth2/start?rd=$request_uri"
 spec:
   rules:
     - host: argocd.cash-gun.com
