@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: nginx-exporter
+  name: redis-exporter-app
   namespace: argocd
 spec:
   destination:
@@ -10,16 +10,16 @@ spec:
   project: default
   source:
     repoURL: https://github.com/yair232/status-page.git
-    path: k8s/monitor/prometheus-nginx-exporter
+    path: k8s/monitor/prometheus-redis-exporter
     targetRevision: HEAD
     helm:
       valueFiles:
-        - values-nginx.yaml
+        - values-redis.yaml
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-  syncWave: '4'
+  syncWave: '8'
   hooks:
    - type: PostSync
      command: ["sh", "-c", "echo 'Waiting 250 seconds before proceeding...'; sleep 10"]

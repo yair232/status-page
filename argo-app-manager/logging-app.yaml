@@ -1,25 +1,25 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: redis-exporter
+  name: logging-app
   namespace: argocd
 spec:
   destination:
-    namespace: default
+    namespace: elastic-stack
     server: https://kubernetes.default.svc
   project: default
   source:
     repoURL: https://github.com/yair232/status-page.git
-    path: k8s/monitor/prometheus-redis-exporter
+    path: k8s/logging
     targetRevision: HEAD
-    helm:
-      valueFiles:
-        - values-redis.yaml
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-  syncWave: '5'
-  hooks:
-   - type: PostSync
-     command: ["sh", "-c", "echo 'Waiting 250 seconds before proceeding...'; sleep 10"]
+    syncOptions: []
+    ignoreDifferences:
+      - kind: StatefulSet
+        name: elasticsearch
+        jsonPointers:
+          - /spec/template/metadata/annotations/kubectl.kubernetes.io~1restartedAt
+  syncWave: "7"

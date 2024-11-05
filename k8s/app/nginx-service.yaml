@@ -4,7 +4,7 @@ metadata:
   name: nginx-service
   namespace: default
 spec:
-  type: LoadBalancer # Change from NodePort to LoadBalancer
+  type: ClusterIP # Change from NodePort to LoadBalancer
   ports:
     - port: 80 # Service port to expose
       targetPort: 80 # Port on the NGINX container

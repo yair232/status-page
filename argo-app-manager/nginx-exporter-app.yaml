@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app
+  name: nginx-exporter-app
   namespace: argocd
 spec:
   destination:
@@ -10,15 +10,16 @@ spec:
   project: default
   source:
     repoURL: https://github.com/yair232/status-page.git
-    path: k8s/app
+    path: k8s/monitor/prometheus-nginx-exporter
     targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values-nginx.yaml
   syncPolicy:
-    syncOptions:
-    - "ServerSideApply=true"
     automated:
       prune: true
       selfHeal: true
-  syncWave: '3'
+  syncWave: '6'
   hooks:
    - type: PostSync
-     command: ["sh", "-c", "echo 'Waiting 10 seconds before proceeding...'; sleep 10"]
+     command: ["sh", "-c", "echo 'Waiting 250 seconds before proceeding...'; sleep 10"]

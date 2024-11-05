@@ -1,6 +1,14 @@
+# grafana-dashboard.yaml
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard
+  namespace: monitoring
+  labels:
+    grafana-dashboard: "true"  # Label for Grafana sidecar to pick up
+    app.kubernetes.io/instance: monitor-app
 data:
-  django-dashboard.json: |-
+  django-dashboard.json: |
     {
         "annotations": {
           "list": [
@@ -425,8 +433,8 @@ data:
         "uid": "ae1hebg4po074b",
         "version": 1,
         "weekStart": ""
-      }
-  nginx-dashboard.json: |-
+      } 
+  nginx-dashboard.json: |
     {
         "annotations": {
           "list": [
@@ -914,8 +922,8 @@ data:
         "uid": "fe1h8w6eabxfke",
         "version": 1,
         "weekStart": ""
-      }
-  redis-dashboard.json: |-
+      } 
+  redis-dashboard.json: |
     {
       "annotations": {
         "list": [
@@ -1374,13 +1382,4 @@ data:
       "uid": "de1hd251t20hsa",
       "version": 1,
       "weekStart": ""
-    }
-kind: ConfigMap
-metadata:
-  creationTimestamp: '2024-11-02T15:23:16Z'
-  labels:
-    app.kubernetes.io/instance: monitor-app
-  name: grafana-dashboard
-  namespace: monitoring
-  resourceVersion: '9024'
-  uid: c0ca188a-b624-4bed-9a94-3f2eee30f5fd
+    } 
