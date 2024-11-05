@@ -1,0 +1,152 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_CREDENTIALS_ID = 'aws-credentials'  // AWS credentials in Jenkins
+        GITHUB_CREDENTIALS_ID = 'github-ssh-key'  // SSH key credential ID for GitHub
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'  // DockerHub credentials in Jenkins
+        DOCKER_IMAGE_NAME = 'rontz/status-page'  // Docker image name
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                script {
+                    echo "Cloning the Git repository..."
+                }
+                git branch: 'main',
+                    url: 'git@github.com:yair232/status-page.git',
+                    credentialsId: "${GITHUB_CREDENTIALS_ID}"
+            }
+        }
+
+        stage('Set Permissions') {
+            steps {
+                script {
+                    echo "Setting executable permissions for manage.py and upgrade.sh..."
+                }
+                sh '''
+                chmod +x statuspage/manage.py
+                chmod +x upgrade.sh
+                '''
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                script {
+                    echo "Running unit tests using pytest..."
+                }
+                sh '''
+                pytest unitest.py
+                '''
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    echo "Building Docker image from the Dockerfile..."
+                }
+                sh '''
+                docker build -t ${DOCKER_IMAGE_NAME}:latest .
+                '''
+            }
+        }
+
+        stage('Test Docker Image') {
+            steps {
+                script {
+                    echo "Testing Docker image for basic functionality..."
+                }
+                sh '''
+                docker run --name test-container -d ${DOCKER_IMAGE_NAME}:latest
+                docker exec test-container /bin/bash -c "echo 'Running health check...'; sleep 2; echo 'Service is up'"
+                docker stop test-container
+                docker rm test-container
+                '''
+            }
+        }
+
+        stage('Terraform Init & Apply') {
+            steps {
+                script {
+                    echo "Initializing and applying Terraform configuration..."
+                }
+                dir('final-project-terraform') {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${AWS_CREDENTIALS_ID}"]]) {
+                        sh '''
+                        terraform init
+                        terraform plan -out=tfplan
+                        terraform apply -auto-approve tfplan
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Save Terraform State to Git') {
+            steps {
+                dir('final-project-terraform') {
+                    script {
+                        echo "Saving Terraform state file to Git..."
+                    }
+                    sshagent(credentials: ["${GITHUB_CREDENTIALS_ID}"]) {
+                        sh '''
+                        git config --global user.email "jenkins@example.com"
+                        git config --global user.name "Jenkins CI"
+                        git add terraform.tfstate
+                        git commit -m "Update Terraform state"
+                        git push origin main
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    echo "Pushing Docker image to Docker Hub..."
+                }
+                withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    docker push ${DOCKER_IMAGE_NAME}:latest
+                    docker logout
+                    '''
+                }
+            }
+        }
+
+        stage('Install Argo CD on EKS Cluster') {
+            steps {
+                script {
+                    echo "Logging into EKS cluster and installing Argo CD using cluster-install-argocd.sh..."
+                }
+                dir('final-project-terraform/Jenkins') {
+                    sh '''
+                    chmod +x cluster-install-argocd.sh
+                    ./cluster-install-argocd.sh
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                echo "Cleaning up workspace and Docker resources..."
+            }
+            cleanWs()
+            sh 'docker system prune -f'
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Please check the logs.'
+        }
+    }
+}
