@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/your-github-username/your-repo-name'  # Replace with your repo URL
+    repoURL: 'https://github.com/yair232/status-page.git'
     targetRevision: HEAD  # Use a specific branch or tag if needed
     path: 'k8s/ingress-nginx'  # Adjust according to your repo structure
   destination:
