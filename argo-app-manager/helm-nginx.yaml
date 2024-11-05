@@ -7,15 +7,16 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/yair232/status-page.git'
-    targetRevision: HEAD  # You can change this to a specific branch/tag if needed
-    path: 'k8s/ingress/helm-nginx'  # Adjust the path to where your Helm chart is located
+    targetRevision: HEAD
+    path: 'k8s/ingress/helm-nginx'
     helm:
       valueFiles:
-        - 'values.yaml'  # Path to your custom values file for Helm
+        - 'values-nginx.yaml'
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: nginx-ingress  # Ensure the target namespace is correct
+    namespace: nginx-ingress
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+
