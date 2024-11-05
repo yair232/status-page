@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: 'https://github.com/yair232/status-page.git'
     targetRevision: HEAD  # Use a specific branch or tag if needed
-    path: 'k8s/helm-nginx'  # Adjust according to your repo structure
+    path: 'k8s/ingress/helm-nginx'  # Adjust according to your repo structure
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: nginx-ingress  # The namespace where you want to deploy NGINX Ingress
