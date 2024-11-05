@@ -8,15 +8,14 @@ spec:
   source:
     repoURL: 'https://github.com/yair232/status-page.git'
     targetRevision: HEAD
-    path: 'k8s/ingress/helm-nginx'
+    path: 'k8s/ingress/helm-nginx'  # Adjust to your repo structure
     helm:
       valueFiles:
-        - 'values-nginx.yaml'
+        - 'values.yaml'  # Make sure this file exists in the helm-nginx directory
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: nginx-ingress
+    namespace: nginx-ingress  # Ensure this matches your intended namespace
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-
