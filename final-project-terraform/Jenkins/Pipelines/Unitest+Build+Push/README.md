@@ -3,8 +3,8 @@
  - Syntax Error
  - File Exist
 
-3. **Build:**
+2. **Build:**
  - Build Docker Image
 
-**Push:** 
+3. **Push:** 
  - Push The New Image to DockerHub
