@@ -24,7 +24,7 @@ module "rds" {
   db_username                = var.db_username
   db_password                = var.db_password
   eks_node_security_group_id = module.vpc.eks_node_sg_id
-  private_subnet_ids = module.vpc.private_subnet_ids
+  private_subnet_ids         = module.vpc.private_subnet_ids
 }
 
 # EKS Module
@@ -32,6 +32,7 @@ module "eks" {
   source                         = "./modules/eks"
   vpc_id                         = module.vpc.vpc_id
   subnet_ids                     = module.vpc.private_subnet_ids
+  private_subnet_ids             = module.vpc.private_subnet_ids 
   security_group_ids             = [module.vpc.eks_node_sg_id]
   eks_cluster_role_arn           = module.iam.eks_cluster_role_arn
   eks_node_group_role_arn        = module.iam.eks_node_group_role_arn

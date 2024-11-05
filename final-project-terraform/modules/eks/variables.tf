@@ -9,6 +9,12 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
+variable "private_subnet_ids" {
+  description = "List of private subnet IDs for the EKS node group"
+  type        = list(string)
+}
+
+
 variable "security_group_ids" {
   description = "List of security group IDs for EKS"
   type        = list(string)
