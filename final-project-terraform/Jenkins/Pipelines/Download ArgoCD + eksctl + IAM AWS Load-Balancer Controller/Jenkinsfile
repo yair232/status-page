@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_CREDENTIALS_ID = 'aws-credentials'  // AWS credentials in Jenkins
+        GITHUB_CREDENTIALS_ID = 'github-ssh-key'  // SSH key credential ID for GitHub
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                script {
+                    echo "Cloning the Git repository to access the cluster-install-argocd.sh script..."
+                }
+                git branch: 'main',
+                    url: 'git@github.com:yair232/status-page.git',
+                    credentialsId: "${GITHUB_CREDENTIALS_ID}"
+            }
+        }
+
+        stage('Install Argo CD on EKS Cluster') {
+            environment {
+                AWS_ACCESS_KEY_ID = credentials('aws-credentials')
+                AWS_SECRET_ACCESS_KEY = credentials('aws-credentials')
+            }
+            steps {
+                script {
+                    echo "Logging into EKS cluster and installing Argo CD using cluster-install-argocd.sh..."
+                }
+                sh '''
+                cd final-project-terraform/Jenkins/
+                ls -la
+                chmod +x cluster-install-argocd.sh
+                ./cluster-install-argocd.sh
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Argo CD installation completed successfully!'
+        }
+        failure {
+            echo 'Argo CD installation failed. Please check the logs.'
+        }
+    }
+}
