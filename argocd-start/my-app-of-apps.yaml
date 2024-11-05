@@ -16,17 +16,19 @@ spec:
     namespace: default
   syncPolicy:
     automated:
-      prune: true           # Automatically prune resources not defined in the Git repository
-      selfHeal: true         # Automatically self-heal resources if they drift from the desired state
+      prune: true
+      selfHeal: true
     syncOptions:
-      - RespectIgnoreDifferences=true  # Respect specified ignoreDifferences rules
-  ignoreDifferences:
-    - group: "*"
-      kind: "Application"
-      namespace: "*"
-      jsonPointers:
-        - /spec/source/helm                 # Ignore helm-specific configurations to avoid desync
-        - /spec/source/retry                # Ignore retry settings
-        - /spec/syncPolicy/automated        # Allow manual control of auto-sync without causing desync
-        - /metadata/annotations/argocd.argoproj.io~1refresh
-        - /metadata/annotations/kubectl.kubernetes.io~1last-applied-configuration
+      - "CreateNamespace=true"
+      - "ApplyOutOfSyncOnly=true"
+      - "RespectIgnoreDifferences=true"  # Ensures ignoreDifferences are respected
+    ignoreDifferences:
+      - group: "*"
+        kind: "*"
+        jsonPointers:
+          - /spec/template/metadata/annotations/kubectl.kubernetes.io~1restartedAt
+          - /status                            # Ignore status fields updated by Kubernetes
+          - /metadata/annotations              # Ignore all annotations in metadata
+          - /spec/syncPolicy/automated         # Allow manual sync policy control without desync
+          - /spec/source/helm                  # Ignore Helm fields that may drift
+          - /spec/source/retry
