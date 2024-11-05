@@ -1,18 +1,32 @@
-
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  labels:
-    app.kubernetes.io/instance: app-manager
   name: my-app-of-apps
   namespace: argocd
+  labels:
+    app.kubernetes.io/instance: app-manager
 spec:
-  destination:
-    namespace: default
-    server: https://kubernetes.default.svc
   project: default
   source:
     repoURL: https://github.com/yair232/status-page.git
     path: argo-app-manager
     targetRevision: HEAD
-  syncPolicy: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true           # Automatically prune resources not defined in the Git repository
+      selfHeal: true         # Automatically self-heal resources if they drift from the desired state
+    syncOptions:
+      - RespectIgnoreDifferences=true  # Respect specified ignoreDifferences rules
+  ignoreDifferences:
+    - group: "*"
+      kind: "Application"
+      namespace: "*"
+      jsonPointers:
+        - /spec/source/helm                 # Ignore helm-specific configurations to avoid desync
+        - /spec/source/retry                # Ignore retry settings
+        - /spec/syncPolicy/automated        # Allow manual control of auto-sync without causing desync
+        - /metadata/annotations/argocd.argoproj.io~1refresh
+        - /metadata/annotations/kubectl.kubernetes.io~1last-applied-configuration
