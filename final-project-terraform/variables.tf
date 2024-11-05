@@ -116,3 +116,9 @@ variable "lb_protocol" {
   default     = "HTTP"
 }
 
+variable "private_subnet_ids" {
+  description = "List of private subnet IDs for EKS node group"
+  type        = list(string)
+}
+
+
