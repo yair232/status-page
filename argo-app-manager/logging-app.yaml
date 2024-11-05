@@ -13,13 +13,9 @@ spec:
     path: k8s/logging
     targetRevision: HEAD
   syncPolicy:
+    syncOptions:
+      - "ServerSideApply=true"
     automated:
       prune: true
       selfHeal: true
-    syncOptions: []
-    ignoreDifferences:
-      - kind: StatefulSet
-        name: elasticsearch
-        jsonPointers:
-          - /spec/template/metadata/annotations/kubectl.kubernetes.io~1restartedAt
-  syncWave: "7"
+  syncWave: '7'
