@@ -13,8 +13,9 @@ POLICY_ARN="arn:aws:iam::992382545251:policy/AWSLoadBalancerControllerIAMPolicy"
 if ! command -v eksctl &> /dev/null; then
   echo "eksctl not found. Installing eksctl..."
   curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-  sudo mv /tmp/eksctl /usr/local/bin
-  if [ $? -ne 0 ]; then
+  chmod +x /tmp/eksctl
+  export PATH=$PATH:/tmp  # Adding /tmp to PATH for the current script session
+  if ! command -v eksctl &> /dev/null; then
     echo "Failed to install eksctl. Exiting."
     exit 1
   fi
