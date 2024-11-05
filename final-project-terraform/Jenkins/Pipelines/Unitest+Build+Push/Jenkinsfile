@@ -1,0 +1,87 @@
+pipeline {
+    agent any
+
+    environment {
+        GITHUB_CREDENTIALS_ID = 'github-ssh-key'  // SSH key credential ID for GitHub
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'  // DockerHub credentials in Jenkins
+        DOCKER_IMAGE_NAME = 'rontz/status-page'  // Docker image name
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                script {
+                    echo "Cloning the Git repository..."
+                }
+                git branch: 'main',
+                    url: 'git@github.com:yair232/status-page.git',
+                    credentialsId: "${GITHUB_CREDENTIALS_ID}"
+            }
+        }
+
+        stage('Set Permissions') {
+            steps {
+                script {
+                    echo "Setting executable permissions for manage.py and upgrade.sh..."
+                }
+                sh '''
+                chmod +x statuspage/manage.py
+                chmod +x upgrade.sh
+                '''
+            }
+        }
+
+        stage('Validate Test') {
+            steps {
+                script {
+                    echo "Running validation tests using pytest..."
+                }
+                sh '''
+                pytest unitest.py
+                '''
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    echo "Building Docker image from the Dockerfile..."
+                }
+                sh '''
+                docker build -t ${DOCKER_IMAGE_NAME}:latest .
+                '''
+            }
+        }
+
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    echo "Pushing Docker image to Docker Hub..."
+                }
+                withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    docker push ${DOCKER_IMAGE_NAME}:latest
+                    docker logout
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                echo "Cleaning up workspace and Docker resources..."
+            }
+            cleanWs()
+            sh 'docker system prune -f'
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Please check the logs.'
+        }
+    }
+}
