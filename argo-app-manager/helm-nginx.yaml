@@ -11,7 +11,7 @@ spec:
     path: 'k8s/ingress/helm-nginx'  # Adjust according to your repo structure
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: nginx-ingress  # The namespace where you want to deploy NGINX Ingress
+    namespace: nginx-ingress
   syncPolicy:
     automated:
       prune: true
