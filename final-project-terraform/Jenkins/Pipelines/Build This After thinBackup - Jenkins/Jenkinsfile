@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Git Pull with Rebase') {
+            steps {
+                script {
+                    // Perform git pull with rebase to ensure the latest changes are pulled before proceeding
+                    sh 'cd /var/lib/jenkins/status-page && git pull --rebase origin main'
+                }
+            }
+        }
+
+        stage('Run Backup Script') {
+            steps {
+                script {
+                    // Execute your bash script to perform the backup
+                    sh '/var/lib/jenkins/backup-jenkins.sh'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Backup completed successfully."
+        }
+        failure {
+            echo "Backup failed. Please check the logs."
+        }
+    }
+}
