@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helm-nginx
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/your-github-username/your-repo-name'  # Replace with your repo URL
+    targetRevision: HEAD  # Use a specific branch or tag if needed
+    path: 'k8s/ingress-nginx'  # Adjust according to your repo structure
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: nginx-ingress  # The namespace where you want to deploy NGINX Ingress
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
