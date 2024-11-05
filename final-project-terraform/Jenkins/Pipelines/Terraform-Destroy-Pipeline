@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_CREDENTIALS_ID = 'aws-credentials'  // AWS credentials in Jenkins
+        GITHUB_CREDENTIALS_ID = 'github-ssh-key'  // SSH key credential ID for GitHub
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                script {
+                    echo "Cloning the Git repository..."
+                }
+                git branch: 'main',
+                    url: 'git@github.com:yair232/status-page.git',
+                    credentialsId: "${GITHUB_CREDENTIALS_ID}"
+            }
+        }
+
+        stage('Terraform Destroy') {
+            environment {
+                AWS_ACCESS_KEY_ID = credentials("${AWS_CREDENTIALS_ID}")
+                AWS_SECRET_ACCESS_KEY = credentials("${AWS_CREDENTIALS_ID}")
+            }
+            steps {
+                dir('final-project-terraform') {
+                    script {
+                        echo "Running terraform destroy..."
+                    }
+                    sh '''
+                    terraform init
+                    terraform destroy -auto-approve
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                echo "Clean up workspace..."
+            }
+            cleanWs()
+        }
+        success {
+            echo 'Terraform destroy completed successfully!'
+        }
+        failure {
+            echo 'Terraform destroy failed. Please check the logs.'
+        }
+    }
+}
