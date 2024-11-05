@@ -14,7 +14,7 @@ spec:
         - 'values.yaml'  # Make sure this file exists in the helm-nginx directory
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: nginx-ingress  # Ensure this matches your intended namespace
+    namespace: ingress-nginx  # Ensure this matches your intended namespace
   syncPolicy:
     automated:
       prune: true
