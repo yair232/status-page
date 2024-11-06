@@ -48,4 +48,4 @@ spec:
         - status-page.cash-gun.com
         - grafana.cash-gun.com
         - kibana.cash-gun.com
-      secretName: tls-services-cash-gun
+      secretName: tls-services-cash-gun-kclt4
