@@ -23,16 +23,14 @@ controller:
     chroot: false
     registry: registry.k8s.io
     image: ingress-nginx/controller
-    ## for backwards compatibility consider setting the full image url via the repository value below
-    ## use *either* current default registry/image or repository format or installing chart by providing the values.yaml will fail
+    ## For backwards compatibility, consider setting the full image URL via the repository value below.
+    ## Use either the current default registry/image or repository format, or installing the chart by providing the values.yaml will fail.
     ## repository:
     tag: "v1.11.3"
-    digest: sha256:d56f135b6462cfc476447cfe564b83a45e8bb7da2774963b00d12161112270b7
-    digestChroot: sha256:22701f0fc0f2dd209ef782f4e281bfe2d8cccd50ededa00aec88e0cdbe7edd14
     pullPolicy: IfNotPresent
+  securityContext:
     runAsNonRoot: true
-    # www-data -> uid 101
-    runAsUser: 101
+    runAsUser: 101  # www-data -> uid 101
     allowPrivilegeEscalation: false
     seccompProfile:
       type: RuntimeDefault
@@ -160,8 +158,6 @@ controller:
   sysctls: {}
   # sysctls:
   #   "net.core.somaxconn": "8192"
-  # -- Security context for controller containers
-  containerSecurityContext: {}
   # -- Allows customization of the source of the IP address or FQDN to report
   # in the ingress status field. By default, it reads the information provided
   # by the service. If disable, the status field reports the IP address of the
@@ -197,10 +193,9 @@ controller:
   ## https://blog.maxmind.com/2019/12/significant-changes-to-accessing-and-using-geolite2-databases/
   maxmindLicenseKey: ""
   # -- Additional command line arguments to pass to Ingress-Nginx Controller
-  # E.g. to specify the default SSL certificate you can use
-  extraArgs: {}
-  ## extraArgs:
-  ##   default-ssl-certificate: "<namespace>/<secret_name>"
+  # E.g., to specify the default SSL certificate you can use
+  extraArgs:
+    default-ssl-certificate: "cert-manager/letsencrypt-prod"
   ##   time-buckets: "0.005,0.01,0.025,0.05,0.1,0.25,0.5,1,2.5,5,10"
   ##   length-buckets: "10,20,30,40,50,60,70,80,90,100"
   ##   size-buckets: "10,100,1000,10000,100000,1e+06,1e+07"
