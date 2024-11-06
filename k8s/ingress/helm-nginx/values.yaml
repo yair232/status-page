@@ -120,7 +120,7 @@ controller:
     # -- Name of the IngressClass
     name: nginx
     # -- Create the IngressClass or not
-    enabled: true
+    enabled: false
     # -- If true, Ingresses without `ingressClassName` get assigned to this IngressClass on creation.
     # Ingress creation gets rejected if there are multiple default IngressClasses.
     # Ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#default-ingress-class
