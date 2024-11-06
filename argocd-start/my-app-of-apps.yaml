@@ -16,7 +16,7 @@ spec:
     targetRevision: HEAD
   syncPolicy:
     automated:
-      prune: false  # Don't delete resources automatically
-      selfHeal: false  # Don't attempt to self-heal or automatically sync
+      prune: true  # Don't delete resources automatically
+      selfHeal: true  # Don't attempt to self-heal or automatically sync
     syncOptions:
       - Validate=true  # Enable validation on sync to ensure resources are correctly defined
