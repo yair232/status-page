@@ -1,4 +1,3 @@
-
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -15,4 +14,9 @@ spec:
     repoURL: https://github.com/yair232/status-page.git
     path: argo-app-manager
     targetRevision: HEAD
-  syncPolicy: {}
+  syncPolicy:
+    automated:
+      prune: false  # Don't delete resources automatically
+      selfHeal: false  # Don't attempt to self-heal or automatically sync
+    syncOptions:
+      - Validate=true  # Enable validation on sync to ensure resources are correctly defined
