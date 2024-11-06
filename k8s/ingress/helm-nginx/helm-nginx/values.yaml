@@ -1,3 +1,5 @@
+installCRDs: false  # Prevents Helm from installing CRDs managed by Argo CD or another application
+
 controller:
   name: controller
   enableAnnotationValidations: false
@@ -15,9 +17,10 @@ controller:
       type: RuntimeDefault
     readOnlyRootFilesystem: true
 
-  # Default SSL Certificate - ensure it references your Cert-Manager namespace and secret
+  # Default SSL Certificate
   config:
-    default-ssl-certificate: "cert-manager/tls-services-certificate"  # Adjust to match your Cert-Manager secret namespace/name
+    default-ssl-certificate: "cert-manager/tls-services-certificate"  # Ensure this matches the Cert-Manager namespace and secret
+
   existingPsp: ""
   containerName: controller
 
@@ -29,9 +32,9 @@ controller:
   # Customize Ingress Class configuration
   ingressClassResource:
     name: nginx
-    enabled: true
+    enabled: false  # Disables creation of IngressClass in Helm, assuming Argo CD manages it
     default: true  # Set to true if this is the primary Ingress Class
-    controllerValue: k8s.io/ingress-nginx  # Sets the Ingress controller
+    controllerValue: k8s.io/ingress-nginx
 
   # Network settings for the NGINX ingress controller
   dnsPolicy: ClusterFirst
@@ -66,29 +69,21 @@ controller:
   # Publishing the service so it is accessible via external IP or LoadBalancer
   publishService:
     enabled: true
-    # -- Allows overriding of the publish service to bind to
-    # Must be <namespace>/<service_name>
-    pathOverride: ""
-  # Limit the scope of the controller to a specific namespace
+    pathOverride: ""  # Optional: Use <namespace>/<service_name> if you want to specify the service explicitly
+
+  # Scope settings for the NGINX ingress controller
   scope:
-    # -- Enable 'scope' or not
     enabled: false
-    # -- Namespace to limit the controller to; defaults to $(POD_NAMESPACE)
     namespace: ""
-    # -- When scope.enabled == false, instead of watching all namespaces, we watching namespaces whose labels
-    # only match with namespaceSelector. Format like foo=bar. Defaults to empty, means watching all namespaces.
     namespaceSelector: ""
-  # -- Allows customization of the configmap / nginx-configmap namespace; defaults to $(POD_NAMESPACE)
+
+  # ConfigMap and TCP/UDP settings for custom configurations
   configMapNamespace: ""
   tcp:
-    # -- Allows customization of the tcp-services-configmap; defaults to $(POD_NAMESPACE)
     configMapNamespace: ""
-    # -- Annotations to be added to the tcp config configmap
     annotations: {}
   udp:
-    # -- Allows customization of the udp-services-configmap; defaults to $(POD_NAMESPACE)
     configMapNamespace: ""
-    # -- Annotations to be added to the udp config configmap
     annotations: {}
   # -- Maxmind license key to download GeoLite2 Databases.
   ## https://blog.maxmind.com/2019/12/significant-changes-to-accessing-and-using-geolite2-databases/
