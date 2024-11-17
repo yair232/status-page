@@ -11,52 +11,50 @@
     <a href="https://www.codacy.com/gh/Status-Page/Status-Page/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Status-Page/Status-Page&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/250b53ad99ca432cbac8d761a975b34d"/></a>
 </p>
 
+# High Availability and Scalability Infrastructure
+
 ## Overview
-- Components
-- Report incidents
-- JSON API
-- Metrics
-- Two Factor Authentication
-- Markdown support in incident / maintenance messages
-- Subscriptions for Notifications
-- Custom Plugins
+This repository contains the implementation of a **highly available and scalable infrastructure** for a Django-based web application. The project is modular, leveraging industry-standard tools such as **ArgoCD**, **Terraform**, **Kubernetes**, and **Jenkins CI/CD pipelines**. Each module ensures optimal reliability, performance, and ease of scaling in both local and production environments.
 
-## Requirements
-| Dependency       | Minimum Version | Optional |
-|------------------|-----------------|----------|
-| Python           | 3.10            | no       |
-| PostgreSQL       | 10              | no       |
-| Redis            | 4.0             | no       |
-| SMTP Mail Server | ---             | yes      |
+For detailed instructions on specific components, refer to the respective READMEs linked below.
 
-## Installation & Updates
-Please have a look at our [Documentation](https://docs.status-page.dev/).
+---
 
-## Public Demo
-We have a public Demo available: https://demo.status-page.dev
+## Key Features
+- **High Availability**:  
+  Ensures redundancy and failover mechanisms across all critical services. Workloads are distributed using Kubernetes to handle potential failures seamlessly.
+  
+- **Scalability**:  
+  The infrastructure supports both horizontal and vertical scaling for services, databases, and application layers. Kubernetes auto-scaling is configured to handle varying traffic loads dynamically.
+  
+- **Infrastructure as Code (IaC)**:  
+  Utilizes Terraform for provisioning cloud resources consistently and reproducibly, across development, staging, and production environments.
+  
+- **CI/CD Integration**:  
+  Jenkins pipelines automate the build, test, and deployment processes. ArgoCD handles GitOps workflows, ensuring consistency between Git configurations and deployed states.
 
-## Versioning
-We use semantic versioning. A version number has the following structure:
-````
-v 1 . 0 . 0
-  ^   ^   ^
-  |   |   |
-  |   |   Patch (Bug fixes)
-  |   |
-  |   Minor (No breaking changes to the Software, e.g. adding new features)
-  |
-  Major (Breaking changes to the Software)
-````
+---
 
-## Documentation
-You can find the Documentation [here](https://docs.status-page.dev/).
+## Repository Structure
+- **[ArgoCD](./argo-app-manager/README.md)**  
+  Manages GitOps workflows to maintain infrastructure and application state consistency.
 
-## Other Licenses and Acknowledgements
-### Tailwind UI
-We are using Tailwind UI Components in this App. You are **NOT** allowed to reuse these Components in your own App!
+- **[Jenkins CI/CD](./contrib/jenkins/README.md)**  
+  Automates the pipeline for building, testing, and deploying the Django application.
 
-See their [License](https://www.notion.so/Tailwind-UI-License-644418bb34ad4fa29aac9b82e956a867) for more information.
+- **[Terraform](./final-project-terraform/README.md)**  
+  Handles provisioning of cloud infrastructure, such as Kubernetes clusters and associated resources.
 
-### NetBox
-As you may have noticed, the base structure for many parts of the app is derived
-from [NetBox](https://github.com/netbox-community/netbox), this made development much easier.
+- **[Kubernetes](./k8s/README.md)**  
+  Orchestrates containerized services to achieve high availability, auto-scaling, and load balancing.
+
+- **[Architecture Flowchart](./Architecture%20-%20FlowChart/README.md)**  
+  Illustrates the overall system architecture, showcasing how components interact to provide scalability and resilience.
+
+---
+
+## Getting Started
+1. **Clone the Repository**:  
+   ```bash
+   git clone https://github.com/yair232/status-page.git
+   cd status-page
