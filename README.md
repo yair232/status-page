@@ -13,6 +13,8 @@
 
 # High Availability and Scalability Infrastructure
 
+![Alt text](Architecture - FlowChart/Application Architecture.png)
+
 ## Overview
 
 This repository contains the implementation of a **highly available and scalable infrastructure** for a Django-based web application. The project is designed with modular components, using tools like **ArgoCD**, **Terraform**, **Kubernetes**, and **Jenkins CI/CD pipelines**. These components ensure resilience, scalability, and ease of deployment.
@@ -27,7 +29,7 @@ To deploy and operate the infrastructure, follow these simple steps:
 
 ### Step 1: Initialize Terraform for Jenkins EC2
 
-Enter [here](Terraform/README.md) and follow the instructions:
+Enter [terraform](Terraform/README.md) and follow the instructions:
 
 ### Step 2: Restore the Jenkins Backup
 
@@ -35,29 +37,22 @@ Enter [terraform/jenkins](Terraform/Jenkins) and follow the instructions:
 
 ---
 
-## Repository Structure
+### Step 3: Set Up ArgoCD
 
-- **[ArgoCD](./argo-app-manager/README.md)**  
-  Manages GitOps workflows to maintain infrastructure and application state consistency.
+#### Navigate to **ArgoCD Directories**:
 
-- **[Jenkins CI/CD](./contrib/jenkins/README.md)**  
-  Automates the pipeline for building, testing, and deploying the Django application.
+1. **Argo App Manager**:
 
-- **[Terraform](./final-project-terraform/README.md)**  
-  Handles provisioning of cloud infrastructure, such as Kubernetes clusters and associated resources.
+   - Directory: `argo-app-manager`
+   - Contains all ArgoCD application manifests for deploying resources.
 
-- **[Kubernetes](./k8s/README.md)**  
-  Orchestrates containerized services to achieve high availability, auto-scaling, and load balancing.
+2. **Argo Start**:
+   - Directory: `argocd-start`
+   - Key file: `my-app-of-apps.yaml`
 
-- **[Architecture Flowchart](./Architecture%20-%20FlowChart/README.md)**  
-  Illustrates the overall system architecture, showcasing how components interact to provide scalability and resilience.
+#### Deploy the ArgoCD Application:
 
----
-
-## Getting Started
-
-1. **Clone the Repository**:
+1. Apply the **`my-app-of-apps.yaml`** configuration:
    ```bash
-   git clone https://github.com/yair232/status-page.git
-   cd status-page
+   kubectl apply -f argocd-start/my-app-of-apps.yaml
    ```
