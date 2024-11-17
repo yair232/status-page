@@ -14,28 +14,25 @@
 # High Availability and Scalability Infrastructure
 
 ## Overview
-This repository contains the implementation of a **highly available and scalable infrastructure** for a Django-based web application. The project is modular, leveraging industry-standard tools such as **ArgoCD**, **Terraform**, **Kubernetes**, and **Jenkins CI/CD pipelines**. Each module ensures optimal reliability, performance, and ease of scaling in both local and production environments.
 
-For detailed instructions on specific components, refer to the respective READMEs linked below.
+This repository contains the implementation of a **highly available and scalable infrastructure** for a Django-based web application. The project is designed with modular components, using tools like **ArgoCD**, **Terraform**, **Kubernetes**, and **Jenkins CI/CD pipelines**. These components ensure resilience, scalability, and ease of deployment.
+
+The infrastructure supports dynamic scaling, redundancy, and monitoring, making it suitable for production-grade systems.
 
 ---
 
-## Key Features
-- **High Availability**:  
-  Ensures redundancy and failover mechanisms across all critical services. Workloads are distributed using Kubernetes to handle potential failures seamlessly.
-  
-- **Scalability**:  
-  The infrastructure supports both horizontal and vertical scaling for services, databases, and application layers. Kubernetes auto-scaling is configured to handle varying traffic loads dynamically.
-  
-- **Infrastructure as Code (IaC)**:  
-  Utilizes Terraform for provisioning cloud resources consistently and reproducibly, across development, staging, and production environments.
-  
-- **CI/CD Integration**:  
-  Jenkins pipelines automate the build, test, and deployment processes. ArgoCD handles GitOps workflows, ensuring consistency between Git configurations and deployed states.
+## Getting Started
+
+To deploy and operate the infrastructure, follow these simple steps:
+
+### Step 1: Initialize Terraform for Jenkins EC2
+
+1. Enter [here](Terraform/README.md). and follow the instructions:
 
 ---
 
 ## Repository Structure
+
 - **[ArgoCD](./argo-app-manager/README.md)**  
   Manages GitOps workflows to maintain infrastructure and application state consistency.
 
@@ -54,7 +51,9 @@ For detailed instructions on specific components, refer to the respective README
 ---
 
 ## Getting Started
-1. **Clone the Repository**:  
+
+1. **Clone the Repository**:
    ```bash
    git clone https://github.com/yair232/status-page.git
    cd status-page
+   ```
