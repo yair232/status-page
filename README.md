@@ -27,7 +27,11 @@ To deploy and operate the infrastructure, follow these simple steps:
 
 ### Step 1: Initialize Terraform for Jenkins EC2
 
-1. Enter [here](Terraform/README.md). and follow the instructions:
+Enter [here](Terraform/README.md) and follow the instructions:
+
+### Step 2: Restore the Jenkins Backup
+
+Enter [terraform/jenkins](Terraform/Jenkins) and follow the instructions:
 
 ---
 
