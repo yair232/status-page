@@ -13,7 +13,7 @@
 
 # High Availability and Scalability Infrastructure
 
-![Alt text](Architecture - FlowChart/Application Architecture.png)
+![Alt text](./Architecture%20-%20FlowChart/Application%20Architecture.png)
 
 ## Overview
 
