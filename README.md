@@ -31,12 +31,12 @@ This repository contains the implementation of a **highly available, scalable, a
 
 2. **Infrastructure as Code (IaC):**
 
-   - **Terraform** provisions all critical AWS resources, including:
-     - Amazon EKS for container orchestration.
-     - Elastic Load Balancers (ELB) for traffic management.
-     - RDS PostgreSQL for a reliable and scalable database.
-     - Redis for high-performance caching.
-   - Modular and reusable Terraform scripts enable easy updates and scaling.
+   - **Terraform for AWS Provisioning**:
+     Provisions critical resources:
+     - **VPC**: Networking, subnets, and gateways.
+     - **EKS**: Kubernetes cluster management.
+     - **Load Balancer**: Distributes traffic.
+     - **IAM Roles**: Manages access and permissions.
 
 3. **High Availability and Fault Tolerance:**
 
