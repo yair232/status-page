@@ -68,27 +68,27 @@ To ensure Argo CD can access the GitHub repository and Helm charts for Prometheu
 Log in to the Argo CD UI and navigate to Settings > Repositories.
 Click Connect Repo using HTTPS.
 Enter the following details:
-Repository URL: https://github.com/yair232/status-page
-Username: Your GitHub username.
-Password/Token: A GitHub personal access token with repo permissions.
+- Repository URL: https://github.com/yair232/status-page
+- Username: Your GitHub username.
+- Password/Token: A GitHub personal access token with repo permissions.
 Click Save.
 Argo CD will now authenticate with the GitHub repository to sync the manifests.
 ### 2. Adding Helm Credentials for Prometheus
 In the Argo CD UI, go to Settings > Repositories > Helm Repositories.
 Click Add Helm Repository and enter the following:
-Name: prometheus-helm-repo
-Repository URL: https://prometheus-community.github.io/helm-charts
-Username: (If required, otherwise leave empty.)
-Password: (If required, otherwise leave empty.)
-Click Save.
+- Name: prometheus-helm-repo
+- Repository URL: https://prometheus-community.github.io/helm-charts
+- Username: (If required, otherwise leave empty.)
+- Password: (If required, otherwise leave empty.)
+- Click Save.
 Argo CD will now fetch Helm charts for Prometheus from this repository.
 ### 3. Adding Helm Credentials for NGINX
 In the Argo CD UI, go to Settings > Repositories > Helm Repositories.
 Click Add Helm Repository and enter the following:
-Name: nginx-helm-repo
-Repository URL: https://kubernetes.github.io/ingress-nginx
-Username: (If required, otherwise leave empty.)
-Password: (If required, otherwise leave empty.)
-Click Save.
+- Name: nginx-helm-repo
+- Repository URL: https://kubernetes.github.io/ingress-nginx
+- Username: (If required, otherwise leave empty.)
+- Password: (If required, otherwise leave empty.)
+- Click Save.
 Argo CD will now fetch Helm charts for NGINX Ingress from this repository.
 
