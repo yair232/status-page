@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        AWS_CREDENTIALS_ID = 'aws-credentials'  // AWS credentials in Jenkins
-        GITHUB_CREDENTIALS_ID = 'github-ssh-key'  // SSH key credential ID for GitHub
-        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'  // DockerHub credentials in Jenkins
-        DOCKER_IMAGE_NAME = 'rontz/status-page'  // Docker image name
+        AWS_CREDENTIALS_ID = 'aws-credentials'
+        GITHUB_CREDENTIALS_ID = 'github-ssh-key'
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
+        DOCKER_IMAGE_NAME = 'rontz/status-page'
     }
 
     stages {
@@ -32,78 +32,80 @@ pipeline {
             }
         }
 
-        stage('Run Unit Tests') {
-            steps {
-                script {
-                    echo "Running unit tests using pytest..."
+        stage('Tests in Parallel') {
+            parallel {
+                stage('Run Unit Tests') {
+                    steps {
+                        script {
+                            echo "Running unit tests using pytest..."
+                        }
+                        sh '''
+                        pytest unitest.py
+                        '''
+                    }
                 }
-                sh '''
-                pytest unitest.py
-                '''
+
+                stage('SonarQube - SAST') {
+                    steps {
+                        withSonarQubeEnv('SonarQube') {
+                            sh '''
+                            sonar:sonar \
+                            -Dsonar.projectKey=numeric-application \
+                            -Dsonar.host.url=http://sonarqube.cahshgun.com
+                            '''
+                        }
+                        timeout(time: 2, unit: 'MINUTES') {
+                            script {
+                                waitForQualityGate abortPipeline: true
+                            }
+                        }
+                    }
+                }
+
+                stage('Trivy - Docker Image Scan') {
+                    steps {
+                        script {
+                            echo "Running Trivy scan for Docker image..."
+                        }
+                        sh '''
+                        docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:latest image --exit-code 0 --severity HIGH --light ${DOCKER_IMAGE_NAME}:latest
+                        docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:latest image --exit-code 1 --severity CRITICAL --light ${DOCKER_IMAGE_NAME}:latest
+
+                        exit_code=$?
+                        echo "Exit Code : $exit_code"
+                        if [[ "${exit_code}" == 1 ]]; then
+                            echo "Image scanning failed. Vulnerabilities found."
+                            exit 1
+                        else
+                            echo "Image scanning passed. No CRITICAL vulnerabilities found."
+                        fi
+                        '''
+                    }
+                }
+
+                stage('Trivy - Terraform Configuration Scan') {
+                    steps {
+                        script {
+                            echo "Running Trivy scan for Terraform configuration files..."
+                        }
+                        sh '''
+                        docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:latest config --exit-code 0 --severity HIGH --input final-project-terraform
+                        docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:latest config --exit-code 1 --severity CRITICAL --input final-project-terraform
+
+                        exit_code=$?
+                        echo "Exit Code : $exit_code"
+                        if [[ "${exit_code}" == 1 ]]; then
+                            echo "Terraform configuration scanning failed. Vulnerabilities found."
+                            exit 1
+                        else
+                            echo "Terraform configuration scanning passed. No CRITICAL vulnerabilities found."
+                        fi
+                        '''
+                    }
+                }
             }
         }
-        stage('SonarQube - SAST') {
-           steps {
-               withSonarQubeEnv('SonarQube') {
-                      sh "sonar:sonar \
-	                      -Dsonar.projectKey=numeric-application \
-	 	                  -Dsonar.host.url=http://sonarqube.cahshgun.com"
-        }
-             timeout(time: 2, unit: 'MINUTES') {
-             script {
-                waitForQualityGate abortPipeline: true
-           }
-         }
-       }
-     }
 
-        stage('Trivy - Docker Image Scan') {
-            steps {
-                script {
-                    echo "Running Trivy scan for Docker image using the latest version..."
-                }
-                sh '''
-                docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:latest image --exit-code 0 --severity HIGH --light ${DOCKER_IMAGE_NAME}:latest
-                docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:latest image --exit-code 1 --severity CRITICAL --light ${DOCKER_IMAGE_NAME}:latest
-
-                # Trivy scan result processing
-                exit_code=$?
-                echo "Exit Code : $exit_code"
-        
-                # Check scan results
-                if [[ "${exit_code}" == 1 ]]; then
-                    echo "Image scanning failed. Vulnerabilities found"
-                    exit 1
-                else
-                    echo "Image scanning passed. No CRITICAL vulnerabilities found"
-                fi
-                '''
-    }
-}
-        stage('Trivy - Terraform Configuration Scan') {
-            steps {
-                script {
-                    echo "Running Trivy scan for Terraform configuration files..."
-                    }
-                    sh '''
-                    # Run Trivy to scan Terraform configurations
-                    docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:latest config --exit-code 0 --severity HIGH --input final-project-terraform
-                    docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:latest config --exit-code 1 --severity CRITICAL --input final-project-terraform
-            
-                    # Trivy scan result processing
-                    exit_code=$?
-                    echo "Exit Code : $exit_code"
-            
-                    # Check scan results
-                    if [[ "${exit_code}" == 1 ]]; then
-                        echo "Terraform configuration scanning failed. Vulnerabilities found."
-                        exit 1
-                    else
-                        echo "Terraform configuration scanning passed. No CRITICAL vulnerabilities found."
-                    fi
-                    '''
-    }
-}
         stage('Build Docker Image') {
             steps {
                 script {
